@@ -12,12 +12,19 @@
 extern "C" {
 #endif
     
-void I2Cinit(void);
-void I2C_wait_for_idle(void);
-void I2CStart(void);
-void I2CStop(void);
-bool I2Csendbyte(char data);
-char I2Cgetbyte(void);
+void I2C_1_init(void);
+void I2C_1_wait_for_idle(void);
+void I2C_1_Start(void);
+void I2C_1_Stop(void);
+bool I2C_1_send_byte(char data);
+char I2C_1_get_byte(void);
+
+void I2C_2_init(void);
+void I2C_2_wait_for_idle(void);
+void I2C_2_Start(void);
+void I2C_2_Stop(void);
+bool I2C_2_send_byte(char data);
+char I2C_2_get_byte(void);
 
 #ifdef	__cplusplus
 }
