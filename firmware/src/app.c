@@ -9,6 +9,8 @@
 
 
 #include "app.h"
+#include "config/default/peripheral/gpio/plib_gpio.h"
+#include "config/default/peripheral/spi/spi_master/plib_spi1_master.h"
 #include "config/default/peripheral/i2c/master/plib_i2c1_master.h"
 #include "config/default/peripheral/tmr/plib_tmr2.h"
 #include "config/default/peripheral/coretimer/plib_coretimer.h"
@@ -53,9 +55,113 @@ int DIRECTION_MOTOR_2 = 1;
 const uint16_t CONTROLLER_1_I2C_ADDRESS = 0x0C;
 const uint16_t DISPLAY_I2C_ADDRESS = 0x14;
 
+/******************************SPI FUNCTIONS***********************************/
+
+uint16_t temp_1 = 0;
+uint16_t temp_2 = 0;
+uint16_t temp_3 = 0;
+// uint8_t r_data_1 = 0;
+// uint8_t r_data_2 = 0;
+
+void SPIInit( void )
+{
+    uint32_t rdata = 0U;
+
+
+    IEC1CLR = 0x8;
+    IEC1CLR = 0x10;
+    IEC1CLR = 0x20;
+
+
+    SPI1CON = 0;
+    rdata = SPI1BUF;
+    rdata = rdata;
+    IFS1CLR = 0x8;
+    IFS1CLR = 0x10;
+    IFS1CLR = 0x20;
+    SPI1BRG = 23;
+    SPI1STATCLR = _SPI1STAT_SPIROV_MASK;
+    // 0x8120 = 8 bit mode
+    // 0x8520 // works?
+    // 0x8560
+    SPI1CON = 0x8560;
+    // SPI1STAT = 0x8000;          // enable SPI peripheral
+}
+
+/*
+uint16_t SPI_Read(void)
+{
+    uint16_t data = 0;
+    TEMP_1_SS_Clear();
+    while ( !SPI1STATbits.SPIRBF ); // Hold till BF bit is set, to make sure the complete data is read
+    data = SPI1BUF;
+    while ( SPI1STATbits.SPIRBF );
+    TEMP_1_SS_Set();
+    return data;
+}
+*/
+
+
+void SPI_Transfer(char data)
+{
+    // int dummy = SPI1BUF;    //Dummy var to clear the value
+    SPI1BUF = (0x00FF & data);
+    while(!SPI1BUF);        //wait for the data to be sent out
+    //LED1 ^= 1;
+    
+}
+
+int SPI_Read_Temp1()
+{
+    
+    SPI1CONbits.DISSDO = 1;
+    TEMP_1_SS_Clear();
+    SPI_Transfer(0x00);
+    CORETIMER_DelayUs(16);
+    SPI1CONbits.DISSDO = 0;
+    TEMP_1_SS_Set();
+    
+    return(SPI1BUF);
+}
+
+int SPI_Read_Temp2()
+{
+    
+    SPI1CONbits.DISSDO = 1;
+    SS_TEMP_2_Clear();
+    SPI_Transfer(0x00);
+    CORETIMER_DelayUs(16);
+    SPI1CONbits.DISSDO = 0;
+    SS_TEMP_2_Set();
+    
+    return(SPI1BUF);
+}
+
+int SPI_Read_Temp3()
+{
+    
+    SPI1CONbits.DISSDO = 1;
+    SS_TEMP_3_Clear();
+    SPI_Transfer(0x00);
+    CORETIMER_DelayUs(16);
+    SPI1CONbits.DISSDO = 0;
+    SS_TEMP_3_Set();
+    
+    return(SPI1BUF);
+}
+
 /******************************I2C FUNCTIONS***********************************/
 
-void I2Cinit()
+typedef union
+{
+    uint8_t buffer[4];
+    float numeric_param_input;
+} FloatToBytes;
+
+FloatToBytes converter;
+
+
+void I2C_1_init()
 {
     /* Disable the I2C Master interrupt */
     IEC1CLR = _IEC1_I2C1MIE_MASK;
@@ -70,40 +176,40 @@ void I2Cinit()
     I2C1CONbits.I2CEN = 1;      // enable module
 }
 
-void I2C_wait_for_idle(void)
+void I2C_1_wait_for_idle(void)
 {
     while(I2C1CON & 0x1F);
     while(I2C1STATbits.TRSTAT);
 }
 
-void I2CStart( void )
+void I2C_1_Start( void )
 {
-    I2C_wait_for_idle();
+    I2C_1_wait_for_idle();
     I2C1CONbits.SEN = 1;        // initiate start condition
     while ( I2C1CONbits.SEN );  // wait for start condition
 }
 
-void I2CStop( void )
+void I2C_1_Stop( void )
 {
     // us_delay( 10 );
-    I2C_wait_for_idle();
+    I2C_1_wait_for_idle();
     I2C1CONbits.PEN = 1;
     while ( I2C1CONbits.PEN );
     //us_delay( 10 );
     CORETIMER_DelayUs(5);
 }
 
-bool I2Csendbyte( char data )
+bool I2C_1_send_byte( char data )
 {
     while ( I2C1STATbits.TBF );     // wait if buffer is full
-    I2C_wait_for_idle();
+    I2C_1_wait_for_idle();
     I2C1TRN = data;                 // pass data to transmit register 
     //us_delay( 10 );
     CORETIMER_DelayUs(5);
     return (I2C1STATbits.ACKSTAT == 0);
 }
 
-char I2Cgetbyte( void )
+char I2C_1_get_byte( void )
 {
     I2C1CONbits.RCEN = 1;           // set RCEN, enables I2C receive mode
     while ( !I2C1STATbits.RBF );    // wait for byte to shift into register
@@ -113,21 +219,81 @@ char I2Cgetbyte( void )
     return ( I2C1RCV );
 }
 
+/******************************************************************************/
+
+void I2C_2_init()
+{
+    /* Disable the I2C Master interrupt */
+    IEC1CLR = _IEC1_I2C2MIE_MASK;
+    /* Disable the I2C Bus collision interrupt */
+    IEC1CLR = _IEC1_I2C2BIE_MASK;
+    I2C2CONbits.DISSLW = 1; // Disable slew rate for 100kHz
+    // 4kHz = 55
+    // 1kHz = 235
+    I2C2BRG = 235;
+    while ( I2C2STATbits.P );
+    I2C2CONbits.A10M = 0;       // 7-bit address mode
+    I2C2CONbits.I2CEN = 1;      // enable module
+}
+
+void I2C_2_wait_for_idle(void)
+{
+    while(I2C2CON & 0x1F);
+    while(I2C2STATbits.TRSTAT);
+}
+
+void I2C_2_Start( void )
+{
+    I2C_2_wait_for_idle();
+    I2C2CONbits.SEN = 1;        // initiate start condition
+    while ( I2C2CONbits.SEN );  // wait for start condition
+}
+
+void I2C_2_Stop( void )
+{
+    // us_delay( 10 );
+    I2C_2_wait_for_idle();
+    I2C2CONbits.PEN = 1;
+    while ( I2C2CONbits.PEN );
+    //us_delay( 10 );
+    CORETIMER_DelayUs(5);
+}
+
+bool I2C_2_send_byte( char data )
+{
+    while ( I2C2STATbits.TBF );     // wait if buffer is full
+    I2C_2_wait_for_idle();
+    I2C2TRN = data;                 // pass data to transmit register 
+    //us_delay( 10 );
+    CORETIMER_DelayUs(5);
+    return (I2C2STATbits.ACKSTAT == 0);
+}
+
+char I2C_2_get_byte( void )
+{
+    I2C2CONbits.RCEN = 1;           // set RCEN, enables I2C receive mode
+    while ( !I2C2STATbits.RBF );    // wait for byte to shift into register
+    I2C2CONbits.ACKEN = 1;          // master sends acknowledge
+    //us_delay( 10 );
+    CORETIMER_DelayUs(5);
+    return ( I2C2RCV );
+}
+
 /*****************************MOTOR FUNCTIONS**********************************/
 int frequency(unsigned char frequency_setting, uint8_t i2c_address)
 {
     if (frequency_setting < F_31372Hz || frequency_setting > F_30Hz)
         return -1;
-    I2CStart();
+    I2C_1_Start();
     CORETIMER_DelayUs(5);
-    I2Csendbyte((i2c_address << 1));
+    I2C_1_send_byte((i2c_address << 1));
     CORETIMER_DelayUs(10);
-    I2Csendbyte( PWMFrequencySet );
+    I2C_1_send_byte( PWMFrequencySet );
     CORETIMER_DelayUs(10);
-    I2Csendbyte( frequency_setting );
+    I2C_1_send_byte( frequency_setting );
     CORETIMER_DelayUs(10);
-    I2Csendbyte( NOTHING );
-    I2CStop();
+    I2C_1_send_byte( NOTHING );
+    I2C_1_Stop();
     CORETIMER_DelayMs(4);
     return 0;
 }
@@ -144,16 +310,16 @@ int begin(unsigned char i2c_address)
 
 void direction(uint8_t motor_directions, uint8_t i2c_address)
 {
-    I2CStart();
+    I2C_1_Start();
     CORETIMER_DelayUs(5);
-    I2Csendbyte((i2c_address << 1));
+    I2C_1_send_byte((i2c_address << 1));
     CORETIMER_DelayUs(10);
-    I2Csendbyte( DIRECTION_SET_CODE );
+    I2C_1_send_byte( DIRECTION_SET_CODE );
     CORETIMER_DelayUs(10);
-    I2Csendbyte( motor_directions );
+    I2C_1_send_byte( motor_directions );
     CORETIMER_DelayUs(10);
-    I2Csendbyte( NOTHING );
-    I2CStop();
+    I2C_1_send_byte( NOTHING );
+    I2C_1_Stop();
     CORETIMER_DelayMs(4);
 }
 
@@ -219,16 +385,16 @@ void speed(unsigned char motor_id, int new_speed, uint8_t i2c_address)
         direction(MOTOR_DIR_BOTH_CCW, i2c_address);
     }
     // send command
-    I2CStart();
+    I2C_1_Start();
     CORETIMER_DelayUs(5);
-    I2Csendbyte((i2c_address << 1));
+    I2C_1_send_byte((i2c_address << 1));
     CORETIMER_DelayUs(10);
-    I2Csendbyte( MotorSpeedSet );
+    I2C_1_send_byte( MotorSpeedSet );
     CORETIMER_DelayUs(10);
-    I2Csendbyte( SPEED_MOTOR_1 );
+    I2C_1_send_byte( SPEED_MOTOR_1 );
     CORETIMER_DelayUs(10);
-    I2Csendbyte( SPEED_MOTOR_2 );
-    I2CStop();
+    I2C_1_send_byte( SPEED_MOTOR_2 );
+    I2C_1_Stop();
     CORETIMER_DelayMs(4);
 }
 
@@ -281,9 +447,18 @@ void APP_Tasks ( void )
     {
         case APP_STATE_INIT:
         {
-            I2Cinit();
+            I2C_1_init();
+            I2C_2_init();
+            SPIInit();
             frequency(F_3921Hz, CONTROLLER_1_I2C_ADDRESS);
             CORETIMER_DelayMs(500);
+            TEMP_1_SS_OutputEnable();
+            TEMP_1_SS_Set();
+            SS_TEMP_2_OutputEnable();
+            SS_TEMP_2_Set();
+            SS_TEMP_3_OutputEnable();
+            SS_TEMP_3_Set();
+            
 
             bool appInitialized = true;
             if (appInitialized)
@@ -309,8 +484,93 @@ void APP_Tasks ( void )
                 }
                 */
             
+                /* temp sensor test */
+            
+                while(1)
+                {
+                    temp_1 = SPI_Read_Temp1();
+                    temp_1 >>= 3;
+                    float temp_1_float = (float)temp_1 * 0.25;
+                    converter.numeric_param_input = temp_1_float;
+                    I2C_2_Start();
+                    CORETIMER_DelayUs(5);
+                    I2C_2_send_byte(DISPLAY_I2C_ADDRESS << 1);
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( 0x05 );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[0] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[1] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[2] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[3] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_Stop();
+                    converter.numeric_param_input = 0;
+                    CORETIMER_DelayUs(200);
+                    
+                    temp_2 = SPI_Read_Temp2();
+                    temp_2 >>= 3;
+                    float temp_2_float = (float)temp_2 * 0.25;
+                    converter.numeric_param_input = temp_2_float;
+                    I2C_2_Start();
+                    CORETIMER_DelayUs(5);
+                    I2C_2_send_byte(DISPLAY_I2C_ADDRESS << 1);
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( 0x06 );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[0] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[1] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[2] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[3] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_Stop();
+                    converter.numeric_param_input = 0;
+                    CORETIMER_DelayUs(200);
+                    
+                    temp_3 = SPI_Read_Temp3();
+                    temp_3 >>= 3;
+                    float temp_3_float = (float)temp_3 * 0.25;
+                    converter.numeric_param_input = temp_3_float;
+                    I2C_2_Start();
+                    CORETIMER_DelayUs(5);
+                    I2C_2_send_byte(DISPLAY_I2C_ADDRESS << 1);
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( 0x04 );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[0] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[1] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[2] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_send_byte( converter.buffer[3] );
+                    CORETIMER_DelayUs(10);
+                    I2C_2_Stop();
+                    converter.numeric_param_input = 0;
+                    CORETIMER_DelayUs(200);
+                    
+                    CORETIMER_DelayMs(2000);
+                    speed(MOTOR_1, 255, CONTROLLER_1_I2C_ADDRESS);
+                    speed(MOTOR_2, 255, CONTROLLER_1_I2C_ADDRESS);
+                    CORETIMER_DelayMs(2000);
+                    stop(MOTOR_1, CONTROLLER_1_I2C_ADDRESS);
+                    stop(MOTOR_2, CONTROLLER_1_I2C_ADDRESS);
+                    CORETIMER_DelayMs(2000);
+                    speed(MOTOR_1, -255, CONTROLLER_1_I2C_ADDRESS);
+                    speed(MOTOR_2, -255, CONTROLLER_1_I2C_ADDRESS);
+                    CORETIMER_DelayMs(2000);
+                    stop(MOTOR_1, CONTROLLER_1_I2C_ADDRESS);
+                    stop(MOTOR_2, CONTROLLER_1_I2C_ADDRESS);
+                    CORETIMER_DelayMs(500);
+                }
+                 
                 /* motor control test */
-
+                /*
                 while(1)
                 {
                     CORETIMER_DelayMs(2000);
@@ -326,7 +586,7 @@ void APP_Tasks ( void )
                     stop(MOTOR_1, CONTROLLER_1_I2C_ADDRESS);
                     stop(MOTOR_2, CONTROLLER_1_I2C_ADDRESS);
                 }
-
+                */
             break;
         }
         default:

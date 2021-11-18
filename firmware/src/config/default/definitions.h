@@ -56,8 +56,10 @@
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/gpio/plib_gpio.h"
 #include "peripheral/evic/plib_evic.h"
+#include "peripheral/spi/spi_master/plib_spi1_master.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "system/debug/sys_debug.h"
 #include "master.h"
 #include "preparation.h"
 #include "extrusion.h"
@@ -162,6 +164,31 @@ Remarks:
 
 void SYS_Tasks ( void );
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Type Definitions
+// *****************************************************************************
+// *****************************************************************************
+
+// *****************************************************************************
+/* System Objects
+
+Summary:
+    Structure holding the system's object handles
+
+Description:
+    This structure contains the object handles for all objects in the
+    MPLAB Harmony project's system configuration.
+
+Remarks:
+    These handles are returned from the "Initialize" functions for each module
+    and must be passed into the "Tasks" function for each module.
+*/
+
+typedef struct
+{
+    char RESERVED;
+} SYSTEM_OBJECTS;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -171,6 +198,7 @@ void SYS_Tasks ( void );
 
 
 
+extern SYSTEM_OBJECTS sysObj;
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

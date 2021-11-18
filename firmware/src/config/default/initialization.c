@@ -108,6 +108,8 @@
 // Section: System Data
 // *****************************************************************************
 // *****************************************************************************
+/* Structure to hold the object handles for the modules in the system. */
+SYSTEM_OBJECTS sysObj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -166,12 +168,14 @@ void SYS_Initialize ( void* data )
 
 	GPIO_Initialize();
 
-    // I2C1_Initialize();
+    I2C1_Initialize();
     CORETIMER_Initialize();
     I2C2_Initialize();
 	BSP_Initialize();
     TMR2_Initialize();
 
+
+	SPI1_Initialize();
 
 
 
@@ -186,8 +190,8 @@ void SYS_Initialize ( void* data )
 
 	/* Enable global interrupts */
     __builtin_enable_interrupts();
-    
-    
+
+
 }
 
 

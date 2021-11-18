@@ -26,7 +26,6 @@
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
-#include "DataManager.h"
 
 
 // *****************************************************************************
@@ -39,7 +38,7 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    
+
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */

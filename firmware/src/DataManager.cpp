@@ -111,7 +111,7 @@ void DataManager::sendNumericParamI2C(uint8_t data_id, float value)
     I2C_2_Stop();
     I2C_2_IS_BUSY = false;
     converter.numeric_param_input = 0;
-    CORETIMER_DelayUs(200);
+    CORETIMER_DelayUs(100);
 }
 
 void DataManager::sendStatusParamI2C(uint8_t data_id, uint8_t status)
@@ -127,7 +127,7 @@ void DataManager::sendStatusParamI2C(uint8_t data_id, uint8_t status)
     CORETIMER_DelayUs(10);
     I2C_2_Stop();
     I2C_2_IS_BUSY = false;
-    CORETIMER_DelayUs(200);
+    CORETIMER_DelayUs(100);
 }
 
 void DataManager::sendAllFreshNumericParams()

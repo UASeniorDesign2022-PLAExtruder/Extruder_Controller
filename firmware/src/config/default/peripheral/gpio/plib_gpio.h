@@ -70,6 +70,45 @@
 #define SCL1_Get()               ((PORTD >> 10) & 0x1)
 #define SCL1_PIN                  GPIO_PIN_RD10
 
+/*** Macros for SCK pin ***/
+#define SCK_Get()               ((PORTD >> 2) & 0x1)
+#define SCK_PIN                  GPIO_PIN_RD2
+
+/*** Macros for MISO pin ***/
+#define MISO_Get()               ((PORTD >> 3) & 0x1)
+#define MISO_PIN                  GPIO_PIN_RD3
+
+/*** Macros for TEMP_1_SS pin ***/
+#define TEMP_1_SS_Set()               (LATDSET = (1<<4))
+#define TEMP_1_SS_Clear()             (LATDCLR = (1<<4))
+#define TEMP_1_SS_Toggle()            (LATDINV= (1<<4))
+#define TEMP_1_SS_OutputEnable()      (TRISDCLR = (1<<4))
+#define TEMP_1_SS_InputEnable()       (TRISDSET = (1<<4))
+#define TEMP_1_SS_Get()               ((PORTD >> 4) & 0x1)
+#define TEMP_1_SS_PIN                  GPIO_PIN_RD4
+
+/*** Macros for MOSI pin ***/
+#define MOSI_Get()               ((PORTD >> 5) & 0x1)
+#define MOSI_PIN                  GPIO_PIN_RD5
+
+/*** Macros for SS_TEMP_2 pin ***/
+#define SS_TEMP_2_Set()               (LATFSET = (1<<0))
+#define SS_TEMP_2_Clear()             (LATFCLR = (1<<0))
+#define SS_TEMP_2_Toggle()            (LATFINV= (1<<0))
+#define SS_TEMP_2_OutputEnable()      (TRISFCLR = (1<<0))
+#define SS_TEMP_2_InputEnable()       (TRISFSET = (1<<0))
+#define SS_TEMP_2_Get()               ((PORTF >> 0) & 0x1)
+#define SS_TEMP_2_PIN                  GPIO_PIN_RF0
+
+/*** Macros for SS_TEMP_3 pin ***/
+#define SS_TEMP_3_Set()               (LATFSET = (1<<1))
+#define SS_TEMP_3_Clear()             (LATFCLR = (1<<1))
+#define SS_TEMP_3_Toggle()            (LATFINV= (1<<1))
+#define SS_TEMP_3_OutputEnable()      (TRISFCLR = (1<<1))
+#define SS_TEMP_3_InputEnable()       (TRISFSET = (1<<1))
+#define SS_TEMP_3_Get()               ((PORTF >> 1) & 0x1)
+#define SS_TEMP_3_PIN                  GPIO_PIN_RF1
+
 
 // *****************************************************************************
 /* GPIO Port

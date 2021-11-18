@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Extruder Controller
+ * Extruder_Controller Refactor
  * globals.h
  * 
  * 
@@ -76,5 +76,5 @@ extern const uint8_t EXTRUSION_STATUS_ID;
 }
 #endif
 
-#endif	/* GLOBAL_IDS_H */
+#endif	/* GLOBALS_H */
 

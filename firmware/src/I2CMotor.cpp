@@ -1,5 +1,5 @@
 /*********************************************************************************
- * Extruder Controller
+ * Extruder_Controller Refactor
  * I2CMotor.cpp
  * 
  * 

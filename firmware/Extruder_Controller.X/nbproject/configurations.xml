@@ -9,6 +9,10 @@
           <logicalFolder name="f2" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/default/bsp/bsp.h</itemPath>
           </logicalFolder>
+          <logicalFolder name="f3" displayName="driver" projectFiles="true">
+            <itemPath>../src/config/default/driver/driver.h</itemPath>
+            <itemPath>../src/config/default/driver/driver_common.h</itemPath>
+          </logicalFolder>
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f4" displayName="clk" projectFiles="true">
               <itemPath>../src/config/default/peripheral/clk/plib_clk.h</itemPath>
@@ -29,10 +33,24 @@
                 <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c2_master.h</itemPath>
               </logicalFolder>
             </logicalFolder>
+            <logicalFolder name="f7" displayName="spi" projectFiles="true">
+              <logicalFolder name="f1" displayName="spi_master" projectFiles="true">
+                <itemPath>../src/config/default/peripheral/spi/spi_master/plib_spi_master_common.h</itemPath>
+                <itemPath>../src/config/default/peripheral/spi/spi_master/plib_spi1_master.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
             <logicalFolder name="f3" displayName="tmr" projectFiles="true">
               <itemPath>../src/config/default/peripheral/tmr/plib_tmr_common.h</itemPath>
               <itemPath>../src/config/default/peripheral/tmr/plib_tmr2.h</itemPath>
             </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f4" displayName="system" projectFiles="true">
+            <logicalFolder name="f1" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/default/system/debug/sys_debug.h</itemPath>
+            </logicalFolder>
+            <itemPath>../src/config/default/system/system.h</itemPath>
+            <itemPath>../src/config/default/system/system_common.h</itemPath>
+            <itemPath>../src/config/default/system/system_module.h</itemPath>
           </logicalFolder>
           <itemPath>../src/config/default/device.h</itemPath>
           <itemPath>../src/config/default/toolchain_specifics.h</itemPath>
@@ -76,11 +94,10 @@
       <itemPath>../src/master.h</itemPath>
       <itemPath>../src/preparation.h</itemPath>
       <itemPath>../src/extrusion.h</itemPath>
-      <itemPath>../src/I2C.h</itemPath>
-      <itemPath>../src/I2CMotor.h</itemPath>
-      <itemPath>../src/DataManager.h</itemPath>
       <itemPath>../src/globals.h</itemPath>
-      <itemPath>../src/I2CBase.h</itemPath>
+      <itemPath>../src/DataManager.h</itemPath>
+      <itemPath>../src/I2CMotor.h</itemPath>
+      <itemPath>../src/I2C.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -116,6 +133,11 @@
               <logicalFolder name="f1" displayName="master" projectFiles="true">
                 <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c1_master.c</itemPath>
                 <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c2_master.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="spi" projectFiles="true">
+              <logicalFolder name="f1" displayName="spi_master" projectFiles="true">
+                <itemPath>../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c</itemPath>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f3" displayName="tmr" projectFiles="true">
@@ -159,11 +181,10 @@
       <itemPath>../src/master.cpp</itemPath>
       <itemPath>../src/preparation.cpp</itemPath>
       <itemPath>../src/extrusion.cpp</itemPath>
-      <itemPath>../src/I2C.c</itemPath>
-      <itemPath>../src/I2CMotor.cpp</itemPath>
-      <itemPath>../src/DataManager.cpp</itemPath>
       <itemPath>../src/globals.cpp</itemPath>
-      <itemPath>../src/I2CBase.cpp</itemPath>
+      <itemPath>../src/DataManager.cpp</itemPath>
+      <itemPath>../src/I2CMotor.cpp</itemPath>
+      <itemPath>../src/I2C.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -177,6 +198,7 @@
         <itemPath>../src/config/default/default.mhc/i2c2.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/tmr2.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/core.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/spi1.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/FreeRTOS.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/i2c1.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/BSP_PIC32MX470_Curiosity_Development_Board.yml</itemPath>

@@ -1,5 +1,5 @@
-/*********************************************************************************
- * Extruder Controller
+ /*********************************************************************************
+ * Extruder_Controller Refactor
  * DataManager.h
  * 
  * 
@@ -48,8 +48,6 @@ class DataManager
       
     private:
         
-        
-        
         typedef union
         {
             uint8_t buffer[4];
@@ -89,18 +87,18 @@ class DataManager
         const uint8_t NUMERIC_PARAM_COUNT = 12;
         const uint8_t STATUS_PARAM_COUNT = 4;
         
-        Numeric_Param desired_yield     = { 0,  0x01, 0.0,  false };
-        Numeric_Param required_input    = { 1,  0x02, 0.0,  false };
-        Numeric_Param ground_weight     = { 2,  0x03, 0.0,  false };
-        Numeric_Param zone_1_temp       = { 3,  0x04, 0.0,  false };
-        Numeric_Param zone_2_temp       = { 4,  0x05, 0.0,  false };
-        Numeric_Param zone_3_temp       = { 5,  0x06, 0.0,  false };
-        Numeric_Param screw_speed       = { 6,  0x07, 0.0,  false };
-        Numeric_Param roller_speed      = { 7,  0x08, 0.0,  false };
-        Numeric_Param spooler_speed     = { 8,  0x09, 0.0,  false };
-        Numeric_Param filament_diameter = { 9,  0x0A, 0.0,  false };
-        Numeric_Param extruded_length   = { 10, 0x0B, 0.0,  false };
-        Numeric_Param projected_yield   = { 11, 0x0C, 0.0,  false };
+        Numeric_Param desired_yield     = { 0,  0x01, 0.0, false };
+        Numeric_Param required_input    = { 1,  0x02, 0.0, false };
+        Numeric_Param ground_weight     = { 2,  0x03, 0.0, false };
+        Numeric_Param zone_1_temp       = { 3,  0x04, 0.0, false };
+        Numeric_Param zone_2_temp       = { 4,  0x05, 0.0, false };
+        Numeric_Param zone_3_temp       = { 5,  0x06, 0.0, false };
+        Numeric_Param screw_speed       = { 6,  0x07, 0.0, false };
+        Numeric_Param roller_speed      = { 7,  0x08, 0.0, false };
+        Numeric_Param spooler_speed     = { 8,  0x09, 0.0, false };
+        Numeric_Param filament_diameter = { 9,  0x0A, 0.0, false };
+        Numeric_Param extruded_length   = { 10, 0x0B, 0.0, false };
+        Numeric_Param projected_yield   = { 11, 0x0C, 0.0, false };
         Status_Param hopper_lid_status  = { 0, 0x10, NONE, false };
         Status_Param grinder_status     = { 1, 0x20, NONE, false };
         Status_Param preparation_status = { 2, 0x30, NONE, false };
@@ -113,22 +111,10 @@ class DataManager
         std::vector<Status_Param> status_params = { hopper_lid_status, grinder_status,
             preparation_status, extrusion_status };
         
-   
         std::vector<uint8_t> fresh_numeric_IDs;
         std::vector<float> fresh_numeric_values;
         std::vector<uint8_t> fresh_status_IDs;
         std::vector<uint8_t> fresh_status_values;
-        
-
-        
-        /*
-        static std::vector<Numeric_Param> numeric_params = { { 0x01, 0.0,  false }, { 0x02, 0.0,  false }, { 0x03, 0.0,  false },
-        { 0x04, 0.0,  false }, { 0x05, 0.0,  false }, { 0x06, 0.0,  false }, { 0x07, 0.0,  false }, { 0x08, 0.0,  false }, 
-        { 0x09, 0.0,  false }, { 0x0A, 0.0,  false }, { 0x0B, 0.0,  false }, { 0x0C, 0.0,  false } };
-        
-        static std::vector<Status_Param> status_params = { { 0x10, NONE, false }, { 0x20, NONE, false }, { 0x30, NONE, false }, { 0x40, NONE, false } };
-        */
 };
 
 #endif	/* DATAMANAGER_H */
-
