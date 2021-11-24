@@ -1,8 +1,8 @@
 /*********************************************************************************
- * Extruder_Controller Refactor
+ * Extruder_Controller
  * I2CMotor.h
- * 
- * 
+ * Wilson Woods
+ * 11.19.2021
  ********************************************************************************/
 
 #ifndef I2CMOTOR_H
@@ -65,7 +65,7 @@ class I2CMotor
         I2CMotor(uint16_t i2c_address);
         I2CMotor(const I2CMotor& orig);
         virtual ~I2CMotor();
-        int setPWMFrequency(unsigned char frequency_setting);
+        void setPWMFrequency();
         float getMotorSpeed(unsigned char motor_id);
         void setMotorDirection(uint8_t motor_directions);
         void setMotorSpeed(unsigned char motor_id, unsigned short new_speed, char new_direction);

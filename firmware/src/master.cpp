@@ -1,7 +1,9 @@
 /*******************************************************************************
- Extruder_Contoller Refactor
-    master.cpp
- *******************************************************************************/
+ * Extruder_Controller
+ * master.cpp
+ * Wilson Woods
+ * 11.18.2021
+ ******************************************************************************/
 
 #include <cstdint>
 #include <vector>
@@ -30,7 +32,7 @@ void MASTER_Tasks ( void )
         case MASTER_STATE_INIT:
         {
             
-            I2C_2_init();
+            I2C_2_Init();
             bool appInitialized = true;
 
 

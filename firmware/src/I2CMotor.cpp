@@ -1,8 +1,8 @@
 /*********************************************************************************
- * Extruder_Controller Refactor
+ * Extruder_Controller
  * I2CMotor.cpp
- * 
- * 
+ * Wilson Woods
+ * 11.19.2021
  ********************************************************************************/
 
 #include <cstdint>
@@ -13,15 +13,13 @@
 #include "globals.h"
 #include "I2C.h"
 
-
-
 /**
  * 
  */
 I2CMotor::I2CMotor(uint16_t i2c_address)
 {
     controller_I2C_address = i2c_address;
-    setPWMFrequency(F_3921Hz);
+    setPWMFrequency();
 }
 
 /**
@@ -40,24 +38,21 @@ I2CMotor::~I2CMotor()
     
 }
 
-int I2CMotor::setPWMFrequency(unsigned char frequency_setting)
+void I2CMotor::setPWMFrequency()
 {
-    if (frequency_setting < F_31372Hz || frequency_setting > F_30Hz)
-        return -1;
     I2C_1_IS_BUSY = true;
     I2C_1_Start();
     CORETIMER_DelayUs(5);
-    I2C_1_send_byte(controller_I2C_address << 1);
+    I2C_1_Send_Byte(controller_I2C_address << 1);
     CORETIMER_DelayUs(10);
-    I2C_1_send_byte(PWMFrequencySet);
+    I2C_1_Send_Byte(PWMFrequencySet);
     CORETIMER_DelayUs(10);
-    I2C_1_send_byte(frequency_setting);
+    I2C_1_Send_Byte(F_3921Hz);
     CORETIMER_DelayUs(10);
-    I2C_1_send_byte(NOTHING);
+    I2C_1_Send_Byte(NOTHING);
     I2C_1_Stop();
     I2C_1_IS_BUSY = false;
     CORETIMER_DelayMs(4);
-    return 0;
 }
 
 float I2CMotor::getMotorSpeed(unsigned char motor_id)
@@ -70,17 +65,16 @@ void I2CMotor::setMotorDirection(uint8_t motor_directions)
     I2C_1_IS_BUSY = true;
     I2C_1_Start();
     CORETIMER_DelayUs(5);
-    I2C_1_send_byte(controller_I2C_address << 1);
+    I2C_1_Send_Byte(controller_I2C_address << 1);
     CORETIMER_DelayUs(10);
-    I2C_1_send_byte(DIRECTION_SET);
+    I2C_1_Send_Byte(DIRECTION_SET);
     CORETIMER_DelayUs(10);
-    I2C_1_send_byte(motor_directions);
+    I2C_1_Send_Byte(motor_directions);
     CORETIMER_DelayUs(10);
-    I2C_1_send_byte(NOTHING);
+    I2C_1_Send_Byte(NOTHING);
     I2C_1_Stop();
     I2C_1_IS_BUSY = false;
     CORETIMER_DelayUs(200);
-    // CORETIMER_DelayMs(4);
 }
 
 // motor_id = 0 for motor_1 and 1 for motor_2
@@ -104,17 +98,16 @@ void I2CMotor::setMotorSpeed(unsigned char motor_id, unsigned short new_speed, c
     I2C_1_IS_BUSY = true;
     I2C_1_Start();
     CORETIMER_DelayUs(5);
-    I2C_1_send_byte(controller_I2C_address << 1);
+    I2C_1_Send_Byte(controller_I2C_address << 1);
     CORETIMER_DelayUs(10);
-    I2C_1_send_byte(MOTOR_SPEED_SET);
+    I2C_1_Send_Byte(MOTOR_SPEED_SET);
     CORETIMER_DelayUs(10);
-    I2C_1_send_byte(motor_objects[0].current_speed);
+    I2C_1_Send_Byte(motor_objects[0].current_speed);
     CORETIMER_DelayUs(10);
-    I2C_1_send_byte(motor_objects[1].current_speed);
+    I2C_1_Send_Byte(motor_objects[1].current_speed);
     I2C_1_Stop();
     I2C_1_IS_BUSY = false;
-    CORETIMER_DelayUs(200);
-    // CORETIMER_DelayMs(4);     
+    CORETIMER_DelayUs(200);    
 }
 
 void I2CMotor::nudgeMotorSpeedUp(unsigned char motor_id, unsigned char amount)
