@@ -68,14 +68,31 @@ void SPI1_Initialize ( void )
 
     /* STOP and Reset the SPI */
     SPI1CON = 0;
+
+    /* Clear the Receiver buffer */
     rdata = SPI1BUF;
     rdata = rdata;
+
+    /* Clear SPI1 Interrupt flags */
     IFS1CLR = 0x8;
     IFS1CLR = 0x10;
     IFS1CLR = 0x20;
+
+    /* BAUD Rate register Setup */
     SPI1BRG = 23;
+
+    /* CLear the Overflow */
     SPI1STATCLR = _SPI1STAT_SPIROV_MASK;
 
+    /*
+    MSTEN = 1
+    CKP = 0
+    CKE = 1
+    MODE<32,16> = 0
+    ENHBUF = 1
+    MSSEN = 0
+    MCLKSEL = 0
+    */
     SPI1CONSET = (SPI1_CON_MSSEN | SPI1_CON_MCLKSEL | SPI1_CON_ENHBUF | SPI1_CON_MODE_32_MODE_16 | SPI1_CON_CKE | SPI1_CON_CKP | SPI1_CON_MSTEN | SPI1_CON_SMP);
 
     /* Enable transmit interrupt when transmit buffer is completely empty (STXISEL = '01') */

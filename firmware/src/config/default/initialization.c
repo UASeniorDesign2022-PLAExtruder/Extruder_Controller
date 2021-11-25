@@ -183,7 +183,8 @@ void SYS_Initialize ( void* data )
 
     MASTER_Initialize();
     PREPARATION_Initialize();
-    EXTRUSION_Initialize();
+    EXTRUSION_INPUT_Initialize();
+    EXTRUSION_CONTROL_Initialize();
 
 
     EVIC_Initialize();

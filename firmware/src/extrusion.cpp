@@ -14,7 +14,6 @@
 #include "config/default/peripheral/tmr/plib_tmr2.h"
 #include "config/default/peripheral/coretimer/plib_coretimer.h"
 
-#include "extrusion.h"
 #include "globals.h"
 #include "DataManager.h"
 #include "SPI.h"

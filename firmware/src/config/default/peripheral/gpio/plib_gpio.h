@@ -78,14 +78,14 @@
 #define MISO_Get()               ((PORTD >> 3) & 0x1)
 #define MISO_PIN                  GPIO_PIN_RD3
 
-/*** Macros for TEMP_1_SS pin ***/
-#define TEMP_1_SS_Set()               (LATDSET = (1<<4))
-#define TEMP_1_SS_Clear()             (LATDCLR = (1<<4))
-#define TEMP_1_SS_Toggle()            (LATDINV= (1<<4))
-#define TEMP_1_SS_OutputEnable()      (TRISDCLR = (1<<4))
-#define TEMP_1_SS_InputEnable()       (TRISDSET = (1<<4))
-#define TEMP_1_SS_Get()               ((PORTD >> 4) & 0x1)
-#define TEMP_1_SS_PIN                  GPIO_PIN_RD4
+/*** Macros for SS_TEMP_1 pin ***/
+#define SS_TEMP_1_Set()               (LATDSET = (1<<4))
+#define SS_TEMP_1_Clear()             (LATDCLR = (1<<4))
+#define SS_TEMP_1_Toggle()            (LATDINV= (1<<4))
+#define SS_TEMP_1_OutputEnable()      (TRISDCLR = (1<<4))
+#define SS_TEMP_1_InputEnable()       (TRISDSET = (1<<4))
+#define SS_TEMP_1_Get()               ((PORTD >> 4) & 0x1)
+#define SS_TEMP_1_PIN                  GPIO_PIN_RD4
 
 /*** Macros for MOSI pin ***/
 #define MOSI_Get()               ((PORTD >> 5) & 0x1)

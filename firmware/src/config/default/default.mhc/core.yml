@@ -206,7 +206,7 @@ children:
     - type: Values
       children:
       - type: User
-        attributes: {value: TEMP_1_SS}
+        attributes: {value: SS_TEMP_1}
   - type: String
     attributes: {id: BSP_PIN_52_FUNCTION_TYPE}
     children:

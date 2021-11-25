@@ -37,11 +37,11 @@ void SPI_Transfer(char data)
 int SPI_Read_Temp_1(void)
 {
     SPI1CONbits.DISSDO = 1;
-    TEMP_1_SS_Clear();                      // slave select low
+    SS_TEMP_1_Clear();                      // slave select low
     SPI_Transfer(0x00);                     // send dummy byte
     CORETIMER_DelayUs(16);                  // wait 16 cycles for 2 bytes
     SPI1CONbits.DISSDO = 0;
-    TEMP_1_SS_Set();                        // slave select high
+    SS_TEMP_1_Set();                        // slave select high
     return(SPI1BUF);                        // read incoming data from buffer
 }
 

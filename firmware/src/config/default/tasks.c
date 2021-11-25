@@ -79,14 +79,24 @@ void _PREPARATION_Tasks(  void *pvParameters  )
         PREPARATION_Tasks();
     }
 }
-/* Handle for the EXTRUSION_Tasks. */
-TaskHandle_t xEXTRUSION_Tasks;
+/* Handle for the EXTRUSION_INPUT_Tasks. */
+TaskHandle_t xEXTRUSION_INPUT_Tasks;
 
-void _EXTRUSION_Tasks(  void *pvParameters  )
+void _EXTRUSION_INPUT_Tasks(  void *pvParameters  )
 {   
     while(1)
     {
-        EXTRUSION_Tasks();
+        EXTRUSION_INPUT_Tasks();
+    }
+}
+/* Handle for the EXTRUSION_CONTROL_Tasks. */
+TaskHandle_t xEXTRUSION_CONTROL_Tasks;
+
+void _EXTRUSION_CONTROL_Tasks(  void *pvParameters  )
+{   
+    while(1)
+    {
+        EXTRUSION_CONTROL_Tasks();
     }
 }
 
@@ -134,13 +144,21 @@ void SYS_Tasks ( void )
                 1,
                 &xPREPARATION_Tasks);
 
-    /* Create OS Thread for EXTRUSION_Tasks. */
-    xTaskCreate((TaskFunction_t) _EXTRUSION_Tasks,
-                "EXTRUSION_Tasks",
+    /* Create OS Thread for EXTRUSION_INPUT_Tasks. */
+    xTaskCreate((TaskFunction_t) _EXTRUSION_INPUT_Tasks,
+                "EXTRUSION_INPUT_Tasks",
                 1024,
                 NULL,
                 1,
-                &xEXTRUSION_Tasks);
+                &xEXTRUSION_INPUT_Tasks);
+
+    /* Create OS Thread for EXTRUSION_CONTROL_Tasks. */
+    xTaskCreate((TaskFunction_t) _EXTRUSION_CONTROL_Tasks,
+                "EXTRUSION_CONTROL_Tasks",
+                1024,
+                NULL,
+                1,
+                &xEXTRUSION_CONTROL_Tasks);
 
 
 
