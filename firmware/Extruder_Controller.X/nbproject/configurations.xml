@@ -98,6 +98,7 @@
       <itemPath>../src/DataManager.h</itemPath>
       <itemPath>../src/I2CMotor.h</itemPath>
       <itemPath>../src/I2C.h</itemPath>
+      <itemPath>../src/SPI.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -185,6 +186,7 @@
       <itemPath>../src/DataManager.cpp</itemPath>
       <itemPath>../src/I2CMotor.cpp</itemPath>
       <itemPath>../src/I2C.c</itemPath>
+      <itemPath>../src/SPI.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
