@@ -1,9 +1,9 @@
- /*********************************************************************************
- * Extruder_Controller Refactor
+/*******************************************************************************
+ * Extruder_Controller
  * DataManager.h
- * 
- * 
- ********************************************************************************/
+ * Wilson Woods
+ * 11.18.2021
+ ******************************************************************************/
 
 #ifndef DATAMANAGER_H
 #define	DATAMANAGER_H
@@ -16,20 +16,19 @@
       
 class DataManager
 {
-    
     public:
         
         const uint16_t DISPLAY_I2C_ADDRESS = 0x14;
         
+        DataManager();
+        DataManager(const DataManager& orig);
+        ~DataManager();
         void setNumericParam(uint8_t index, float param);
         void setStatusParam(uint8_t index, uint8_t param);
-        
         float   getNumericParam(uint8_t index);
         uint8_t getStatusParam(uint8_t index);
-        
         void clearNumericParamFlag(uint8_t index);
         void clearStatusParamFlag(uint8_t index);
-        
         void pollNumericParams();
         void pollStatusParams();
         void sendNumericParamI2C(uint8_t data_id, float value);
@@ -42,13 +41,9 @@ class DataManager
         std::vector<uint8_t>& getFreshStatusIDs();
         std::vector<uint8_t>& getFreshStatusValues();
 
-        DataManager();
-        DataManager(const DataManager& orig);
-        ~DataManager();
-      
     private:
         
-        typedef union
+        typedef union                   // convert between float and char[4]
         {
             uint8_t buffer[4];
             float numeric_param_input;
@@ -56,7 +51,7 @@ class DataManager
 
         FloatToBytes converter;
 
-        typedef enum
+        typedef enum                    // status values
         {
             NONE,
             READY,
@@ -68,25 +63,26 @@ class DataManager
             COMPLETE
         } STATUS;
 
-        typedef struct
+        typedef struct                  // numeric parameter object
         {
-            const uint8_t data_index;
-            const uint8_t data_id;
-            float value;
-            bool is_current;  
+            const uint8_t data_index;   // index in numeric_params[] vector
+            const uint8_t data_id;      // unique identifier, read by display
+            float value;                // numeric parameter value
+            bool is_current;            // status flag
         } Numeric_Param;
 
-        typedef struct
+        typedef struct                  // status parameter object
         {
-            const uint8_t data_index;
-            const uint8_t data_id;
-            STATUS status;
-            bool is_current;   
+            const uint8_t data_index;   //index in status_params[] vector
+            const uint8_t data_id;      // unique identifier, read by display
+            STATUS status;              // status parameter value
+            bool is_current;            // status flag
         } Status_Param;
         
-        const uint8_t NUMERIC_PARAM_COUNT = 12;
-        const uint8_t STATUS_PARAM_COUNT = 4;
+        const uint8_t NUMERIC_PARAM_COUNT = 12; // length of numeric_params[]
+        const uint8_t STATUS_PARAM_COUNT = 4;   // length of status_params[]
         
+        // Numeric_Param objects for all numeric values to be tracked
         Numeric_Param desired_yield     = { 0,  0x01, 0.0, false };
         Numeric_Param required_input    = { 1,  0x02, 0.0, false };
         Numeric_Param ground_weight     = { 2,  0x03, 0.0, false };
@@ -99,17 +95,22 @@ class DataManager
         Numeric_Param filament_diameter = { 9,  0x0A, 0.0, false };
         Numeric_Param extruded_length   = { 10, 0x0B, 0.0, false };
         Numeric_Param projected_yield   = { 11, 0x0C, 0.0, false };
+        
+        // Status_Param objects for all status values to be tracked
         Status_Param hopper_lid_status  = { 0, 0x10, NONE, false };
         Status_Param grinder_status     = { 1, 0x20, NONE, false };
         Status_Param preparation_status = { 2, 0x30, NONE, false };
         Status_Param extrusion_status   = { 3, 0x40, NONE, false };
 
-        std::vector<Numeric_Param> numeric_params = { desired_yield, required_input,
-            ground_weight, zone_1_temp, zone_2_temp, zone_3_temp, screw_speed, roller_speed, spooler_speed,
+        // vector of Numeric_Param structs
+        std::vector<Numeric_Param> numeric_params = { desired_yield,
+            required_input, ground_weight, zone_1_temp, zone_2_temp,
+            zone_3_temp, screw_speed, roller_speed, spooler_speed,
             filament_diameter, extruded_length, projected_yield };
         
-        std::vector<Status_Param> status_params = { hopper_lid_status, grinder_status,
-            preparation_status, extrusion_status };
+        // vector of Status_Param structs
+        std::vector<Status_Param> status_params = { hopper_lid_status,
+            grinder_status, preparation_status, extrusion_status };
         
         std::vector<uint8_t> fresh_numeric_IDs;
         std::vector<float> fresh_numeric_values;
