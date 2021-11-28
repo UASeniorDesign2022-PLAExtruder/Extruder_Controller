@@ -4,6 +4,7 @@
  * Wilson Woods
  * 11.25.2021
  ******************************************************************************/
+
 #include <cstdint>
 
 #include "extrusion_control.h"
@@ -25,6 +26,11 @@ I2CMotor controller2(CONTROLLER_2_I2C_ADDRESS);
 const uint8_t MOTOR_1_ID = 0;
 const uint8_t MOTOR_2_ID = 1;
 float current_motor_speed = 0;
+
+float current_temp_1 = 0;
+float current_temp_2 = 0;
+float current_temp_3 = 0;
+float current_diameter = 0;
 
 EXTRUSION_CONTROL_DATA extrusion_controlData;
 
@@ -57,10 +63,8 @@ void EXTRUSION_CONTROL_Tasks ( void )
             
             bool appInitialized = true;
 
-
             if (appInitialized)
             {
-
                 extrusion_controlData.state = EXTRUSION_CONTROL_STATE_SERVICE_TASKS;
             }
             break;
@@ -68,8 +72,15 @@ void EXTRUSION_CONTROL_Tasks ( void )
 
         case EXTRUSION_CONTROL_STATE_SERVICE_TASKS:
         {
-
-            break;
+            current_temp_1 = globalDataManager.getNumericParam(ZONE_1_TEMP_INDEX);
+            current_temp_2 = globalDataManager.getNumericParam(ZONE_2_TEMP_INDEX);
+            current_temp_3 = globalDataManager.getNumericParam(ZONE_3_TEMP_INDEX);
+            current_diameter = globalDataManager.getNumericParam(DIAMETER_INDEX);
+            
+            /*  
+             * TO DO: Implement feedback control
+             */
+            
         }
 
         default:

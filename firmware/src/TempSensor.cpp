@@ -79,11 +79,11 @@ float TempSensor::readTemp()
             break; 
     }
     
-    int rawTemp = SPI1BUF;                          // read incoming data from buffer
-    rawTemp >>= 3;
-    float celsiusTemp = (float)rawTemp;
+    int raw_temp = SPI1BUF;                          // read incoming data from buffer
+    raw_temp >>= 3;
+    float celsius_temp = (float)raw_temp;
     if (READ_CELSIUS == true)
-        return celsiusTemp;
+        return celsius_temp;
     else
-        return ((celsiusTemp * (9 / 5)) + 32);
+        return ((celsius_temp * (9 / 5)) + 32);
 }

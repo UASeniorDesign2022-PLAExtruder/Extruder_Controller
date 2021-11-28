@@ -35,10 +35,8 @@ void MASTER_Tasks ( void )
             I2C_2_Init();
             bool appInitialized = true;
 
-
             if (appInitialized)
             {
-
                 masterData.state = MASTER_STATE_SERVICE_TASKS;
             }
             break;
@@ -46,6 +44,10 @@ void MASTER_Tasks ( void )
 
         case MASTER_STATE_SERVICE_TASKS:
         {
+            /*
+             * TO DO: Implement process control flow state machine
+             */
+            
             globalDataManager.pollNumericParams();
             globalDataManager.sendAllFreshNumericParams();
             CORETIMER_DelayUs(50); 

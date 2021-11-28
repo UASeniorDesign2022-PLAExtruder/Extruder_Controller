@@ -44,7 +44,6 @@ void EXTRUSION_INPUT_Tasks ( void )
 
             if (appInitialized)
             {
-
                 extrusion_inputData.state = EXTRUSION_INPUT_STATE_SERVICE_TASKS;
             }
             break;
