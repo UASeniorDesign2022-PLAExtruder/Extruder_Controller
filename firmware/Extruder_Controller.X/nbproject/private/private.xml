@@ -8,6 +8,7 @@
             <file>file:/home/wilson/HarmonyProjects/Extruder/Extruder_Controller/firmware/src/extrusion_input.cpp</file>
             <file>file:/home/wilson/HarmonyProjects/Extruder/Extruder_Controller/firmware/src/TempSensor.h</file>
             <file>file:/home/wilson/HarmonyProjects/Extruder/Extruder_Controller/firmware/src/TempSensor.cpp</file>
+            <file>file:/home/wilson/HarmonyProjects/Extruder/Extruder_Controller/firmware/src/DataManager.cpp</file>
             <file>file:/home/wilson/HarmonyProjects/Extruder/Extruder_Controller/firmware/src/I2CMotor.cpp</file>
         </group>
     </open-files>
