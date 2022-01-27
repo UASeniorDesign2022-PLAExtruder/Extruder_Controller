@@ -11,7 +11,7 @@
 
 #include "SPI.h"
 
-void SPI_Init( void )
+void SPI_init( void )
 {
     uint32_t rdata = 0U;
     IEC1CLR = 0x8;
@@ -28,41 +28,41 @@ void SPI_Init( void )
     SPI1CON = 0x8560;                       // PIC32 master, 16-bit mode
 }
 
-void SPI_Transfer(char data)
+void SPI_transfer( char data )
 {
-    SPI1BUF = (0x00FF & data);              // pass data to buffer
-    while(!SPI1BUF);                        // wait for data to be sent out
+    SPI1BUF = ( 0x00FF & data );            // pass data to buffer
+    while( !SPI1BUF );                      // wait for data to be sent out
 }
 
-int SPI_Read_Temp_1(void)
+int SPI_read_temp_1( void )
 {
     SPI1CONbits.DISSDO = 1;
     SS_TEMP_1_Clear();                      // slave select low
-    SPI_Transfer(0x00);                     // send dummy byte
-    CORETIMER_DelayUs(16);                  // wait 16 cycles for 2 bytes
+    SPI_transfer( 0x00 );                   // send dummy byte
+    CORETIMER_DelayUs( 16 );                // wait 16 cycles for 2 bytes
     SPI1CONbits.DISSDO = 0;
     SS_TEMP_1_Set();                        // slave select high
-    return(SPI1BUF);                        // read incoming data from buffer
+    return ( SPI1BUF );                     // read incoming data from buffer
 }
 
-int SPI_Read_Temp_2(void)
+int SPI_read_temp_2( void )
 {
     SPI1CONbits.DISSDO = 1;
     SS_TEMP_2_Clear();                      // slave select low
-    SPI_Transfer(0x00);                     // send dummy byte
-    CORETIMER_DelayUs(16);                  // wait 16 cycles for 2 bytes
+    SPI_transfer( 0x00 );                   // send dummy byte
+    CORETIMER_DelayUs( 16 );                // wait 16 cycles for 2 bytes
     SPI1CONbits.DISSDO = 0;
     SS_TEMP_2_Set();                        // slave select high
-    return(SPI1BUF);                        // read incoming data from buffer
+    return ( SPI1BUF );                     // read incoming data from buffer
 }
 
-int SPI_Read_Temp_3(void)
+int SPI_read_temp_3( void )
 {
     SPI1CONbits.DISSDO = 1;
     SS_TEMP_3_Clear();                      // slave select low
-    SPI_Transfer(0x00);                     // send dummy byte
-    CORETIMER_DelayUs(16);                  // wait 16 cycles for 2 bytes
+    SPI_transfer( 0x00 );                   // send dummy byte
+    CORETIMER_DelayUs( 16 );                // wait 16 cycles for 2 bytes
     SPI1CONbits.DISSDO = 0;
     SS_TEMP_3_Set();                        // slave select high
-    return(SPI1BUF);                        // read incoming data from buffer
+    return ( SPI1BUF );                     // read incoming data from buffer
 }

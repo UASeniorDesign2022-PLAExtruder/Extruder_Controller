@@ -13,34 +13,34 @@ extern "C" {
 #endif
     
 /**
- * SPIInit()
+ * SPI_init()
  * Initialize the PIC32MX470 SPI1 module 
  */
-void SPI_Init(void);
+void SPI_init( void );
 
 /**
- * SPI_Transfer()
+ * SPI_transfer()
  * Send dummy byte to initiate SPI1 module master read
  */
-void SPI_Transfer(char data);
+void SPI_transfer( char data );
 
 /**
- * SPI_Read_Temp1()
+ * SPI_read_temp_1()
  * Read 2 bytes from SPI slave device connected at SS 1
  */
-int SPI_Read_Temp_1(void);
+int SPI_read_temp_1( void );
 
 /**
- * SPI_Read_Temp2()
+ * SPI_read_temp_2()
  * Read 2 bytes from SPI slave device connected at SS 2
  */
-int SPI_Read_Temp_2(void);
+int SPI_read_temp_2( void );
 
 /**
- * SPI_Read_Temp3()
+ * SPI_read_temp_3()
  * Read 2 bytes from SPI slave device connected at SS 3
  */
-int SPI_Read_Temp_3(void);
+int SPI_read_temp_3( void );
 
 #ifdef	__cplusplus
 }

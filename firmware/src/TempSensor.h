@@ -14,10 +14,9 @@ class TempSensor
 {
     public:
         
-        TempSensor(uint8_t sensor_id);
-        TempSensor(const TempSensor& orig);
+        TempSensor( uint8_t sensor_id );
         virtual ~TempSensor();
-        float readTemp();
+        float read_temp( void );
         
     private:
         

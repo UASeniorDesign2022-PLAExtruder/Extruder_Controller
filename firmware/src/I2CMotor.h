@@ -62,16 +62,15 @@ class I2CMotor
         int DIRECTION_MOTOR_1 = 1;
         int DIRECTION_MOTOR_2 = 1;
         
-        I2CMotor(uint16_t i2c_address);
-        I2CMotor(const I2CMotor& orig);
+        I2CMotor( uint16_t i2c_address );
         virtual ~I2CMotor();
-        void setPWMFrequency();
-        float getMotorSpeed(unsigned char motor_id);
-        void setMotorDirection(uint8_t motor_directions);
-        void setMotorSpeed(unsigned char motor_id, unsigned short new_speed, char new_direction);
-        void nudgeMotorSpeedUp(unsigned char motor_id, unsigned char amount);
-        void nudgeMotorSpeedDown(unsigned char motor_id, unsigned char amount);
-        int stopMotor(unsigned char motor_id);
+        void set_PWM_frequency( void );
+        float get_motor_speed( unsigned char motor_id );
+        void set_motor_direction( uint8_t motor_directions );
+        void set_motor_speed( unsigned char motor_id, unsigned short new_speed, char new_direction );
+        void nudge_motor_speed_up( unsigned char motor_id, unsigned char amount );
+        void nudge_motor_speed_down( unsigned char motor_id, unsigned char amount );
+        int stop_motor( unsigned char motor_id );
 
     private:
 

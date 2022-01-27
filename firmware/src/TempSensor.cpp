@@ -15,10 +15,10 @@
 #include "globals.h"
 #include "SPI.h"
 
-TempSensor::TempSensor(uint8_t sensor_id)
+TempSensor::TempSensor( uint8_t sensor_id )
 {
     SENSOR_ID = sensor_id;
-    switch(SENSOR_ID)
+    switch( SENSOR_ID )
     {
         case 1:
             SS_TEMP_1_OutputEnable();
@@ -37,41 +37,36 @@ TempSensor::TempSensor(uint8_t sensor_id)
     }    
 }
 
-TempSensor::TempSensor(const TempSensor& orig)
-{
-    
-}
-
 TempSensor::~TempSensor()
 {
     
 }
 
-float TempSensor::readTemp()
+float TempSensor::read_temp()
 {
-    switch(SENSOR_ID)
+    switch( SENSOR_ID )
     {
         case 1:
             SPI1CONbits.DISSDO = 1;
             SS_TEMP_1_Clear();                      // set ss low
-            SPI_Transfer(0x00);                     // send dummy byte
-            CORETIMER_DelayUs(16);                  // wait 16 cycles for 2 bytes
+            SPI_transfer( 0x00 );                   // send dummy byte
+            CORETIMER_DelayUs( 16 );                // wait 16 cycles for 2 bytes
             SPI1CONbits.DISSDO = 0;
             SS_TEMP_1_Set();                        // set ss high
             break;
         case 2:
             SPI1CONbits.DISSDO = 1;
             SS_TEMP_2_Clear();                      // set ss low
-            SPI_Transfer(0x00);                     // send dummy byte
-            CORETIMER_DelayUs(16);                  // wait 16 cycles for 2 bytes
+            SPI_transfer( 0x00 );                   // send dummy byte
+            CORETIMER_DelayUs( 16 );                // wait 16 cycles for 2 bytes
             SPI1CONbits.DISSDO = 0;
             SS_TEMP_2_Set();                        // set ss high
             break;
         case 3:
             SPI1CONbits.DISSDO = 1;
             SS_TEMP_3_Clear();                      // set ss low
-            SPI_Transfer(0x00);                     // send dummy byte
-            CORETIMER_DelayUs(16);                  // wait 16 cycles for 2 bytes
+            SPI_transfer( 0x00 );                   // send dummy byte
+            CORETIMER_DelayUs( 16 );                // wait 16 cycles for 2 bytes
             SPI1CONbits.DISSDO = 0;
             SS_TEMP_3_Set();                        // set ss high
             break;
@@ -82,8 +77,8 @@ float TempSensor::readTemp()
     int raw_temp = SPI1BUF;                          // read incoming data from buffer
     raw_temp >>= 3;
     float celsius_temp = (float)raw_temp;
-    if (READ_CELSIUS == true)
+    if ( READ_CELSIUS == true )
         return celsius_temp;
     else
-        return ((celsius_temp * (9 / 5)) + 32);
+        return ( ( celsius_temp * ( 9 / 5 ) ) + 32 );
 }

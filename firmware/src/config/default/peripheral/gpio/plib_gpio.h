@@ -62,6 +62,19 @@
 // *****************************************************************************
 
 
+/*** Macros for SP_TENSION_ADC pin ***/
+#define SP_TENSION_ADC_Get()               ((PORTB >> 9) & 0x1)
+#define SP_TENSION_ADC_PIN                  GPIO_PIN_RB9
+
+/*** Macros for SP_TENSION_LED pin ***/
+#define SP_TENSION_LED_Set()               (LATBSET = (1<<11))
+#define SP_TENSION_LED_Clear()             (LATBCLR = (1<<11))
+#define SP_TENSION_LED_Toggle()            (LATBINV= (1<<11))
+#define SP_TENSION_LED_OutputEnable()      (TRISBCLR = (1<<11))
+#define SP_TENSION_LED_InputEnable()       (TRISBSET = (1<<11))
+#define SP_TENSION_LED_Get()               ((PORTB >> 11) & 0x1)
+#define SP_TENSION_LED_PIN                  GPIO_PIN_RB11
+
 /*** Macros for SDA1 pin ***/
 #define SDA1_Get()               ((PORTD >> 9) & 0x1)
 #define SDA1_PIN                  GPIO_PIN_RD9

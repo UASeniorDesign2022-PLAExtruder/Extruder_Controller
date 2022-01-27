@@ -20,25 +20,24 @@
 
 MASTER_DATA masterData;
 
-void MASTER_Initialize ( void )
+void MASTER_Initialize( void )
 {
     masterData.state = MASTER_STATE_INIT;
 }
 
-void MASTER_Tasks ( void )
+void MASTER_Tasks( void )
 {
     switch ( masterData.state )
     {
         case MASTER_STATE_INIT:
         {
             
-            I2C_2_Init();
+            I2C_2_init();
             bool appInitialized = true;
 
-            if (appInitialized)
-            {
+            if ( appInitialized )
                 masterData.state = MASTER_STATE_SERVICE_TASKS;
-            }
+                
             break;
         }
 
@@ -48,9 +47,9 @@ void MASTER_Tasks ( void )
              * TO DO: Implement process control flow state machine
              */
             
-            globalDataManager.pollNumericParams();
-            globalDataManager.sendAllFreshNumericParams();
-            CORETIMER_DelayUs(50); 
+            globalDataManager.poll_numeric_params();
+            globalDataManager.send_all_fresh_numeric_params();
+            CORETIMER_DelayUs( 50 ); 
 
             break;
         }

@@ -175,6 +175,8 @@ void SYS_Initialize ( void* data )
     TMR2_Initialize();
 
 
+    ADC_Initialize();
+
 	SPI1_Initialize();
 
 

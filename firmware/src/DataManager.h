@@ -21,27 +21,30 @@ class DataManager
         const uint16_t DISPLAY_I2C_ADDRESS = 0x14;
         
         DataManager();
-        DataManager(const DataManager& orig);
         ~DataManager();
-        void setNumericParam(uint8_t index, float param);
-        void setStatusParam(uint8_t index, uint8_t param);
-        float   getNumericParam(uint8_t index);
-        uint8_t getStatusParam(uint8_t index);
-        void clearNumericParamFlag(uint8_t index);
-        void clearStatusParamFlag(uint8_t index);
-        void pollNumericParams();
-        void pollStatusParams();
-        void sendNumericParamI2C(uint8_t data_id, float value);
-        void sendStatusParamI2C(uint8_t data_id, uint8_t status);
-        void sendAllFreshNumericParams();
-        void sendAllFreshStatusParams();
+        void set_numeric_param( uint8_t index, float param );
+        void set_status_param( uint8_t index, uint8_t param );
+        void set_spooler_tension( uint16_t tension );
+        float get_numeric_param( uint8_t index );
+        uint8_t get_status_param( uint8_t index );
+        uint16_t get_spooler_tension( void );
+        void clear_numeric_param_flag( uint8_t index );
+        void clear_status_param_flag( uint8_t index );
+        void poll_numeric_params( void );
+        void poll_status_params( void );
+        void send_numeric_param_I2C( uint8_t data_id, float value );
+        void send_status_param_I2C( uint8_t data_id, uint8_t status );
+        void send_all_fresh_numeric_params( void );
+        void send_all_fresh_status_params( void );
         
-        std::vector<uint8_t>& getFreshNumericIDs();
-        std::vector<float>&   getFreshNumericValues();
-        std::vector<uint8_t>& getFreshStatusIDs();
-        std::vector<uint8_t>& getFreshStatusValues();
+        std::vector<uint8_t>& get_fresh_numeric_IDs();
+        std::vector<float>&   get_fresh_numeric_values();
+        std::vector<uint8_t>& get_fresh_status_IDs();
+        std::vector<uint8_t>& get_fresh_status_values();
 
     private:
+        
+        uint16_t spooler_tension = 0;
         
         typedef union                   // convert between float and char[4]
         {

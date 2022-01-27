@@ -106,7 +106,7 @@ void CLK_Initialize( void )
     while(!OSCCONbits.SLOCK);
 
     /* Peripheral Module Disable Configuration */
-    PMD1 = 0x1101;
+    PMD1 = 0x1100;
     PMD2 = 0x3;
     PMD3 = 0x1f001f;
     PMD4 = 0x18;
