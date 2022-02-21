@@ -47,8 +47,8 @@ void MASTER_Tasks( void )
              * TO DO: Implement process control flow state machine
              */
             
-            globalDataManager.poll_numeric_params();
-            globalDataManager.send_all_fresh_numeric_params();
+            dataManager.poll_numeric_params();
+            dataManager.send_all_fresh_numeric_params();
             CORETIMER_DelayUs( 50 ); 
 
             break;

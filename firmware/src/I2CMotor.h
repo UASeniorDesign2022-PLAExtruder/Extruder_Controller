@@ -15,7 +15,7 @@ class I2CMotor
 {
     public:
         
-        uint8_t controller_I2C_address  = 0;
+        uint8_t I2C_ADDRESS  = 0;
         const char CLOCKWISE = 1;
         const char COUNTERCLOCKWISE = -1;
         
@@ -39,38 +39,44 @@ class I2CMotor
         
         std::vector<Motor_Object> motor_objects = { motor_1, motor_2 };
 
-        uint8_t DIRECTION_SET           = 0xaa;
-        uint8_t MOTOR_DIR_BOTH_CW       = 0x0a;
-        uint8_t MOTOR_DIR_BOTH_CCW      = 0x05;
-        uint8_t MOTOR_DIR_M1CW_M2CCW    = 0x06;
-        uint8_t MOTOR_DIR_M1CCW_M2CW    = 0x09;
-        uint8_t MOTOR_SPEED_SET         = 0x82;
-        uint8_t PWMFrequencySet         = 0x84;
-        uint8_t MotorSetA               = 0xa1;
-        uint8_t MotorSetB               = 0xa5;
-        uint8_t NOTHING                 = 0x01;
-        uint8_t F_31372Hz               = 0x01;
-        uint8_t F_3921Hz                = 0x02;
-        uint8_t F_490Hz                 = 0x03;
-        uint8_t F_122Hz                 = 0x04;
-        uint8_t F_30Hz                  = 0x05;
+        // bytes for communicating with I2C motor controller
+        uint8_t DIRECTION_SET   = 0xaa;     // indicate next byte is direction
+        uint8_t SPEED_SET       = 0x82;     // indicate next byte is speed
+        uint8_t FREQ_SET        = 0x84;     // indicate next byte is frequency
+        
+        // motor directions
+        uint8_t BOTH_CW         = 0x0a;     // both clockwise
+        uint8_t BOTH_CCW        = 0x05;     // both counter
+        uint8_t CW_CCW          = 0x06;     // M1 clockwise, M2 counter
+        uint8_t CCW_CW          = 0x09;     // M1 counter, M2 clockwise
+        
+        uint8_t EMPTY           = 0x01;     // send empty byte
+        uint8_t F_3921Hz        = 0x02;     // use this one
+        
+        // alternative PWM frequencies compatible with I2C motor controller
+        uint8_t F_31372Hz       = 0x01;
+        uint8_t F_490Hz         = 0x03;
+        uint8_t F_122Hz         = 0x04;
+        uint8_t F_30Hz          = 0x05;
 
         // speed 0 to 255
         unsigned char SPEED_MOTOR_1 = 0;
         unsigned char SPEED_MOTOR_2 = 0;
+        
         // clockwise = 1 | counterclockwise = -1
         int DIRECTION_MOTOR_1 = 1;
         int DIRECTION_MOTOR_2 = 1;
         
         I2CMotor( uint16_t i2c_address );
         virtual ~I2CMotor();
+        void send_I2C( uint8_t flag, uint8_t data_byte_1 = 0x01, uint8_t data_byte_2 = 0x01 );
         void set_PWM_frequency( void );
         float get_motor_speed( unsigned char motor_id );
         void set_motor_direction( uint8_t motor_directions );
-        void set_motor_speed( unsigned char motor_id, unsigned short new_speed, char new_direction );
-        void nudge_motor_speed_up( unsigned char motor_id, unsigned char amount );
-        void nudge_motor_speed_down( unsigned char motor_id, unsigned char amount );
-        int stop_motor( unsigned char motor_id );
+        float set_speed( unsigned char motor_id, unsigned short new_speed );
+        float nudge_up( unsigned char motor_id, unsigned char amount );
+        float nudge_down( unsigned char motor_id, unsigned char amount );
+        float stop( unsigned char motor_id );
 
     private:
 

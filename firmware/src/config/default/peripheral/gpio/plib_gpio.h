@@ -62,6 +62,24 @@
 // *****************************************************************************
 
 
+/*** Macros for PWM_OUT_2 pin ***/
+#define PWM_OUT_2_Set()               (LATGSET = (1<<6))
+#define PWM_OUT_2_Clear()             (LATGCLR = (1<<6))
+#define PWM_OUT_2_Toggle()            (LATGINV= (1<<6))
+#define PWM_OUT_2_OutputEnable()      (TRISGCLR = (1<<6))
+#define PWM_OUT_2_InputEnable()       (TRISGSET = (1<<6))
+#define PWM_OUT_2_Get()               ((PORTG >> 6) & 0x1)
+#define PWM_OUT_2_PIN                  GPIO_PIN_RG6
+
+/*** Macros for PWM_OUT_1 pin ***/
+#define PWM_OUT_1_Set()               (LATGSET = (1<<9))
+#define PWM_OUT_1_Clear()             (LATGCLR = (1<<9))
+#define PWM_OUT_1_Toggle()            (LATGINV= (1<<9))
+#define PWM_OUT_1_OutputEnable()      (TRISGCLR = (1<<9))
+#define PWM_OUT_1_InputEnable()       (TRISGSET = (1<<9))
+#define PWM_OUT_1_Get()               ((PORTG >> 9) & 0x1)
+#define PWM_OUT_1_PIN                  GPIO_PIN_RG9
+
 /*** Macros for SP_TENSION_ADC pin ***/
 #define SP_TENSION_ADC_Get()               ((PORTB >> 9) & 0x1)
 #define SP_TENSION_ADC_PIN                  GPIO_PIN_RB9

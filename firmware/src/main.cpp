@@ -27,6 +27,9 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
 
+void TIMER2_EventHandler(uint32_t status, uintptr_t context)
+{
+}
 
 // *****************************************************************************
 // *****************************************************************************
@@ -39,6 +42,8 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
+    TMR2_CallbackRegister(TIMER2_EventHandler,(uintptr_t)NULL);
+    
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */

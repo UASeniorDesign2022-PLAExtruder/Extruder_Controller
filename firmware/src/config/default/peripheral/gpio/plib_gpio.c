@@ -81,6 +81,9 @@ void GPIO_Initialize ( void )
     TRISFCLR = 0x3; /* Direction Control */
 
     /* PORTG Initialization */
+    LATG = 0x0; /* Initial Latch Value */
+    TRISGCLR = 0x240; /* Direction Control */
+    ANSELGCLR = 0x240; /* Digital Mode Enable */
 
 
 
@@ -89,6 +92,7 @@ void GPIO_Initialize ( void )
 
     /* PPS Output Remapping */
     RPD5R = 8;
+    RPD0R = 12;
 
 
 }

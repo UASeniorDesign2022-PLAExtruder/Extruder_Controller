@@ -5,34 +5,37 @@
  * 11.25.2021
  ******************************************************************************/
 
-#include <cstdint>
+#include <cstdint>                                              // int types
 
 #include "extrusion_input.h"
-#include "config/default/peripheral/gpio/plib_gpio.h"
-#include "config/default/peripheral/coretimer/plib_coretimer.h"
-#include "config/default/peripheral/adc/plib_adc.h"
+#include "config/default/peripheral/gpio/plib_gpio.h"           // tension LED
+#include "config/default/peripheral/coretimer/plib_coretimer.h" // timers
+#include "config/default/peripheral/adc/plib_adc.h"             // pressure ADC
 
-#include "globals.h"
+#include "globals.h"                                            // dataManager
 #include "SPI.h"
 #include "TempSensor.h"
 #include "DataManager.h"
 
-float pressure_input = 0;
+/***************************** Initializations ********************************/
 
-#define ADC_VREF                (5.0f)
-#define ADC_MAX_COUNT           (1023U)
+#define ADC_VREF        (5.0f)  
+#define ADC_MAX_COUNT   (1023U)
 
-uint16_t adc_count;
 
-float temp_1_float = 0;
-float temp_2_float = 0;
-float temp_3_float = 0;
+TempSensor zone_1( 1 );                     // temperature sensor objects
+TempSensor zone_2( 2 );
+TempSensor zone_3( 3 );
 
-TempSensor tempSensor1( 1 );
-TempSensor tempSensor2( 2 );
-TempSensor tempSensor3( 3 );
+// local variables
+float z1 = 0;                               // zone temperatures
+float z2 = 0;
+float z3 = 0;
+uint16_t adc_count;                         // pressure sensor reading
 
-EXTRUSION_INPUT_DATA extrusion_inputData;
+EXTRUSION_INPUT_DATA extrusion_inputData;   // hold thread FSM state
+
+/******************************************************************************/
 
 void EXTRUSION_INPUT_Initialize( void )
 {
@@ -45,8 +48,8 @@ void EXTRUSION_INPUT_Tasks( void )
     {
         case EXTRUSION_INPUT_STATE_INIT:
         {
-            SPI_init();
-            CORETIMER_DelayUs ( 50 );
+            SPI_init();                             // initialize SPI for
+            CORETIMER_DelayUs ( 50 );               // temp. sensor reading   
             SP_TENSION_LED_OutputEnable();
             bool appInitialized = true;
 
@@ -58,32 +61,20 @@ void EXTRUSION_INPUT_Tasks( void )
         case EXTRUSION_INPUT_STATE_SERVICE_TASKS:
         {
             
-            ADC_ConversionStart();
-            while( !ADC_ResultIsReady() );
+            ADC_ConversionStart();                  // read pressure ADC to
+            while( !ADC_ResultIsReady() );          // determine spooler tension
             adc_count = ADC_ResultGet( ADC_RESULT_BUFFER_0 );
-            globalDataManager.set_spooler_tension( adc_count );
-            if ( adc_count > 200 )
-            {
-                SP_TENSION_LED_Set();
-            }
-            else
-            {
-                SP_TENSION_LED_Clear();
-            }
-                
-            temp_1_float = tempSensor1.read_temp();
-            globalDataManager.set_numeric_param( ZONE_1_TEMP_INDEX, temp_1_float );
-            temp_1_float = 0;
-            CORETIMER_DelayUs( 10 );
+            // global_spooler_tension = adc_count;
+            dataManager.set_spooler_tension( adc_count );
             
-            temp_2_float = tempSensor2.read_temp();
-            globalDataManager.set_numeric_param( ZONE_2_TEMP_INDEX, temp_2_float );
-            temp_2_float = 0;
+            z1 = zone_1.read_temp();
+            dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
             CORETIMER_DelayUs( 10 );
-            
-            temp_3_float = tempSensor3.read_temp();
-            globalDataManager.set_numeric_param( ZONE_3_TEMP_INDEX, temp_3_float );
-            temp_3_float = 0;
+            z2 = zone_2.read_temp();
+            dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, z2 );
+            CORETIMER_DelayUs( 10 );
+            z3 = zone_3.read_temp();
+            dataManager.set_numeric_param( ZONE_3_TEMP_INDEX, z3 );
             CORETIMER_DelayMs( 50 );
             
             break;

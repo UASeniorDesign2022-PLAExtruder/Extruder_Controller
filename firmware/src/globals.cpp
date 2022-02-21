@@ -9,11 +9,12 @@
 #include "globals.h"
 #include "DataManager.h"
 
-DataManager globalDataManager;
+DataManager dataManager;
 
 bool I2C_1_IS_BUSY = false;
 bool I2C_2_IS_BUSY = false;
 
+uint16_t global_spooler_tension = 0;
 
 /*************************** Numeric Parameter IDs ****************************/
 

@@ -61,6 +61,7 @@
 // *****************************************************************************
 
 
+void TIMER_2_InterruptHandler( void );
 void TIMER_3_InterruptHandler( void );
 void I2C_1_InterruptHandler( void );
 void I2C_2_InterruptHandler( void );
@@ -69,6 +70,11 @@ void I2C_2_InterruptHandler( void );
 
 /* All the handlers are defined here.  Each will call its PLIB-specific function. */
 
+
+void TIMER_2_Handler (void)
+{
+    TIMER_2_InterruptHandler();
+}
 
 void TIMER_3_Handler (void)
 {

@@ -15,10 +15,12 @@
 extern "C" {
 #endif
     
-extern DataManager globalDataManager;
+extern DataManager dataManager;
+
 extern bool I2C_1_IS_BUSY;
 extern bool I2C_2_IS_BUSY;
 
+extern uint16_t global_spooler_tension;
 
 /*************************** Numeric Parameter IDs ****************************/
 extern const uint8_t DESIRED_YIELD_INDEX;

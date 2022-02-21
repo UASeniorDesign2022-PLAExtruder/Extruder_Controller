@@ -53,6 +53,7 @@
 #include "peripheral/i2c/master/plib_i2c2_master.h"
 #include "bsp/bsp.h"
 #include "peripheral/tmr/plib_tmr2.h"
+#include "peripheral/tmr/plib_tmr3.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/gpio/plib_gpio.h"
 #include "peripheral/evic/plib_evic.h"
