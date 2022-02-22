@@ -61,20 +61,23 @@ void EXTRUSION_INPUT_Tasks( void )
         case EXTRUSION_INPUT_STATE_SERVICE_TASKS:
         {
             
-            ADC_ConversionStart();                  // read pressure ADC to
-            while( !ADC_ResultIsReady() );          // determine spooler tension
-            adc_count = ADC_ResultGet( ADC_RESULT_BUFFER_0 );
+            //ADC_ConversionStart();                  // read pressure ADC to
+            //while( !ADC_ResultIsReady() );          // determine spooler tension
+            //adc_count = ADC_ResultGet( ADC_RESULT_BUFFER_0 );
             // global_spooler_tension = adc_count;
-            dataManager.set_spooler_tension( adc_count );
+            //dataManager.set_spooler_tension( adc_count );
             
             z1 = zone_1.read_temp();
             dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
+            z1 = 0;
             CORETIMER_DelayUs( 10 );
             z2 = zone_2.read_temp();
             dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, z2 );
+            z2 = 0;
             CORETIMER_DelayUs( 10 );
             z3 = zone_3.read_temp();
             dataManager.set_numeric_param( ZONE_3_TEMP_INDEX, z3 );
+            z3 = 0;
             CORETIMER_DelayMs( 50 );
             
             break;

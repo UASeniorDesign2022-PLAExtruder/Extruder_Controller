@@ -1,2 +1,6 @@
 /firmware/Extruder_Controller.X/build/
 /firmware/Extruder_Controller.X/dist/
+/firmware/Extruder_Controller.X/.generated_files/
+/firmware/Extruder_Controller.X/nbproject/private/
+/firmware/Extruder_Controller.X/nbproject/Makefile-*
+
