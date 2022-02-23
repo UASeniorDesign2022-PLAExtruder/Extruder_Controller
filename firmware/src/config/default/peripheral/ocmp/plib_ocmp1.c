@@ -1,23 +1,20 @@
 /*******************************************************************************
-  TMR Peripheral Library Interface Source File
+  Output Compare OCMP1 Peripheral Library (PLIB)
 
-  Company
+  Company:
     Microchip Technology Inc.
 
-  File Name
-    plib_tmr2.c
+  File Name:
+    plib_ocmp1.c
 
-  Summary
-    TMR2 peripheral library source file.
+  Summary:
+    OCMP1 Source File
 
-  Description
-    This file implements the interface to the TMR peripheral library.  This
-    library provides access to and control of the associated peripheral
-    instance.
+  Description:
+    None
 
 *******************************************************************************/
 
-// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
@@ -40,108 +37,71 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-// DOM-IGNORE-END
-
+#include "plib_ocmp1.h"
 
 // *****************************************************************************
+
 // *****************************************************************************
-// Section: Included Files
+// Section: OCMP1 Implementation
 // *****************************************************************************
 // *****************************************************************************
 
-#include "device.h"
-#include "plib_tmr2.h"
+// *****************************************************************************
 
 
-static TMR_TIMER_OBJECT tmr2Obj;
+OCMP_OBJECT ocmp1Obj;
 
-
-void TMR2_Initialize(void)
+void OCMP1_Initialize (void)
 {
-    /* Disable Timer */
-    T2CONCLR = _T2CON_ON_MASK;
+    /*Setup OC1CON        */
+    /*OCM         = 1        */
+    /*OCTSEL       = 0        */
+    /*OC32         = 0        */
+    /*SIDL         = false    */
 
-    /*
-    SIDL = 0
-    TCKPS =0
-    T32   = 0
-    TCS = 0
-    */
-    T2CONSET = 0x0;
+    OC1CON = 0x0006;
 
-    /* Clear counter */
-    TMR2 = 0x0;
+    OC1R = 200;
 
-    /*Set period */
-    PR2 = 399U;
+    // IEC0SET = _IEC0_OC1IE_MASK;
+}
 
-    /* Enable TMR Interrupt */
-    //IEC0SET = _IEC0_T2IE_MASK;
+void OCMP1_Enable (void)
+{
+    OC1CONSET = _OC1CON_ON_MASK;
+}
 
+void OCMP1_Disable (void)
+{
+    OC1CONCLR = _OC1CON_ON_MASK;
 }
 
 
-void TMR2_Start(void)
+void OCMP1_CompareValueSet (uint16_t value)
 {
-    T2CONSET = _T2CON_ON_MASK;
+    OC1R = value;
+}
+
+uint16_t OCMP1_CompareValueGet (void)
+{
+    return (uint16_t)OC1R;
 }
 
 
-void TMR2_Stop (void)
+void OCMP1_CallbackRegister(OCMP_CALLBACK callback, uintptr_t context)
 {
-    T2CONCLR = _T2CON_ON_MASK;
+    ocmp1Obj.callback = callback;
+
+    ocmp1Obj.context = context;
 }
 
-void TMR2_PeriodSet(uint16_t period)
+void OUTPUT_COMPARE_1_InterruptHandler (void)
 {
-    PR2  = period;
-}
+    IFS0CLR = _IFS0_OC1IF_MASK;    //Clear IRQ flag
 
-uint16_t TMR2_PeriodGet(void)
-{
-    return (uint16_t)PR2;
-}
-
-uint16_t TMR2_CounterGet(void)
-{
-    return (uint16_t)(TMR2);
-}
-
-
-uint32_t TMR2_FrequencyGet(void)
-{
-    return (48000000);
-}
-
-
-void TIMER_2_InterruptHandler (void)
-{
-    uint32_t status  = 0U;
-    status = IFS0bits.T2IF;
-    IFS0CLR = _IFS0_T2IF_MASK;
-
-    if((tmr2Obj.callback_fn != NULL))
+    if( (ocmp1Obj.callback != NULL))
     {
-        tmr2Obj.callback_fn(status, tmr2Obj.context);
+        ocmp1Obj.callback(ocmp1Obj.context);
     }
 }
 
-
-void TMR2_InterruptEnable(void)
-{
-    IEC0SET = _IEC0_T2IE_MASK;
-}
-
-
-void TMR2_InterruptDisable(void)
-{
-    IEC0CLR = _IEC0_T2IE_MASK;
-}
-
-
-void TMR2_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context )
-{
-    /* Save callback_fn and context in local memory */
-    tmr2Obj.callback_fn = callback_fn;
-    tmr2Obj.context = context;
-}

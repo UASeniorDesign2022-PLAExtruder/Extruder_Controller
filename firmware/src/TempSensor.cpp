@@ -79,19 +79,25 @@ float TempSensor::read_temp()
     float celsius_temp = (float)raw_temp;
     
     /*
-    if ( buffer_index < SIZE )
+    if ( buffer_index < 10 )
     {
         buffer[buffer_index] = celsius_temp;
+        buffer_index++;
     }
     else
     {
-        uint8_t index = 0;
+        uint8_t index = 8;
         // shift samples in FIFO buffer
-        while ( index < SIZE - 1) { buffer[index + 1] = buffer[index]; }
+        while ( index > 0)
+        {
+            buffer[index + 1] = buffer[index];
+            index--;
+        }
         // new sample to first position
         buffer[0] = celsius_temp;
     }
     */
+    
     if ( READ_CELSIUS == true )
         return celsius_temp;
     else
@@ -103,9 +109,11 @@ float TempSensor::moving_avg()
 {
     float avg = 0;
     uint8_t index = 0;
-    while ( index < SIZE ) { avg += buffer[index]; }
-    ++index;
-    // return (float)(avg / index);
-    return 0.0;
+    while ( index < 10 )
+    {
+        avg += buffer[index];
+        index++;
+    }
+    return (avg / 10.0);
 }
 */

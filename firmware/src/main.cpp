@@ -26,6 +26,8 @@
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
+#include "config/default/peripheral/tmr/plib_tmr2.h"
+
 
 void TIMER2_EventHandler(uint32_t status, uintptr_t context)
 {
@@ -43,6 +45,7 @@ int main ( void )
     SYS_Initialize ( NULL );
 
     TMR2_CallbackRegister(TIMER2_EventHandler,(uintptr_t)NULL);
+    
     
     while ( true )
     {

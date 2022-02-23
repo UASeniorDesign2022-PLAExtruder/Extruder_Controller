@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-#define TMR2_RESCALE_256    0x8070
+#define TMR2_PRESCALE_256    0x8070
 #define TMR2_PRESCALE_64     0x8060
 #define TMR2_PRESCALE_32     0x8050
 #define TMR2_PRESCALE_16     0x8040

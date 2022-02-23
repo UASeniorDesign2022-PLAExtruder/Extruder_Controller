@@ -168,15 +168,19 @@ void SYS_Initialize ( void* data )
 
 	GPIO_Initialize();
 
+    ICAP1_Initialize();
+
+    ADC_Initialize();
+
+    OCMP1_Initialize();
+
     I2C1_Initialize();
     CORETIMER_Initialize();
     I2C2_Initialize();
 	BSP_Initialize();
-    // TMR2_Initialize();
+    TMR2_Initialize();
 
-    // TMR3_Initialize();
-
-    ADC_Initialize();
+    TMR3_Initialize();
 
 	SPI1_Initialize();
 

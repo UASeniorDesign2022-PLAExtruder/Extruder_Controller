@@ -21,6 +21,7 @@
 
 /***************************** Initializations ********************************/
 
+/*
 const uint8_t M1 = 0;        // refer to motors on either I2C controller
 const uint8_t M2 = 1;
 
@@ -36,10 +37,12 @@ uint16_t tension_upper_limit = 750;             // adjust for filament tension
 // local variables
 float roller_speed = 0;
 float spooler_speed = 0;
+float current_diameter = 0;
+ * 
 float zone1 = 0;
 float zone2 = 0;
 float zone3 = 0;
-float current_diameter = 0;
+*/
 
 /*
 void __ISR(_TIMER_2_VECTOR, IPL7AUTO) T2_IntHandler (void)
@@ -47,9 +50,6 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) T2_IntHandler (void)
     IFS0CLR = 0x0100;
 }
 */
-
-
-
 
 EXTRUSION_CONTROL_DATA extrusion_controlData;   // hold thread FSM state
 
@@ -72,10 +72,13 @@ void EXTRUSION_CONTROL_Tasks( void )
             // higher pre-scale = lower base frequency for TMR2
             // ( and in turn lower PWM frequency )
             // larger period = lower PWM frequency
-            pwm_init(399U, 200U, TMR2_PRESCALE_64);
-            PWM_OUT_1_Set();
+            
+            pwm_init(3999U, 1000U, TMR2_PRESCALE_32);
+            
+            // PWM_OUT_1_Set();
             // PWM_OUT_2_Set();
-                    
+            
+            /*
             I2C_1_init();
             CORETIMER_DelayMs( 100 );
             rollers.stop(M1);
@@ -88,6 +91,7 @@ void EXTRUSION_CONTROL_Tasks( void )
             spooler_speed = spooler.set_speed( M1, 150 );
             dataManager.set_numeric_param( ROLLER_SPEED_INDEX, roller_speed );
             dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_speed );
+            */
             
             bool appInitialized = true;
 
@@ -99,24 +103,29 @@ void EXTRUSION_CONTROL_Tasks( void )
 
         case EXTRUSION_CONTROL_STATE_SERVICE_TASKS:
         {
+            /*
             zone1 = dataManager.get_numeric_param( ZONE_1_TEMP_INDEX );
             zone2 = dataManager.get_numeric_param( ZONE_2_TEMP_INDEX );
             zone3 = dataManager.get_numeric_param( ZONE_3_TEMP_INDEX );
             current_diameter = dataManager.get_numeric_param( DIAMETER_INDEX );
+            */
             
-            pwm_set_duty_cycle(100);
-            CORETIMER_DelayMs(1000);
-            
-            pwm_set_duty_cycle(50);
-            CORETIMER_DelayMs(1000);
-            
-            pwm_set_duty_cycle(150);
-            CORETIMER_DelayMs(1000);
-            
-            pwm_set_duty_cycle(300);
-            CORETIMER_DelayMs(1000);
-            
-            
+            /*
+            while(1)
+            {
+                pwm_set_duty_cycle(1000);
+                CORETIMER_DelayMs(1000);
+
+                pwm_set_duty_cycle(2000);
+                CORETIMER_DelayMs(1000);
+
+                pwm_set_duty_cycle(3000);
+                CORETIMER_DelayMs(1000);
+
+                pwm_set_duty_cycle(4000);
+                CORETIMER_DelayMs(1000);
+            }
+            */
             /*
             while(1)
             {

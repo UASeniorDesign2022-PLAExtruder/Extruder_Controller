@@ -1,23 +1,20 @@
 /*******************************************************************************
-  TMR Peripheral Library Interface Source File
+  Input Capture (ICAP1) Peripheral Library (PLIB)
 
-  Company
+  Company:
     Microchip Technology Inc.
 
-  File Name
-    plib_tmr2.c
+  File Name:
+    plib_icap1.c
 
-  Summary
-    TMR2 peripheral library source file.
+  Summary:
+    ICAP1 Source File
 
-  Description
-    This file implements the interface to the TMR peripheral library.  This
-    library provides access to and control of the associated peripheral
-    instance.
+  Description:
+    None
 
 *******************************************************************************/
 
-// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
@@ -40,108 +37,79 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-// DOM-IGNORE-END
+#include "plib_icap1.h"
 
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
+ICAP_OBJECT icap1Obj;
 // *****************************************************************************
 
-#include "device.h"
-#include "plib_tmr2.h"
+// *****************************************************************************
+// Section: ICAP1 Implementation
+// *****************************************************************************
+// *****************************************************************************
 
 
-static TMR_TIMER_OBJECT tmr2Obj;
-
-
-void TMR2_Initialize(void)
+void ICAP1_Initialize (void)
 {
-    /* Disable Timer */
-    T2CONCLR = _T2CON_ON_MASK;
+    /*Setup IC1CON    */
+    /*ICM     = 2        */
+    /*ICI     = 0        */
+    /*ICTMR = 0*/
+    /*C32     = 0        */
+    /*FEDGE = 0        */
+    /*SIDL     = false    */
 
-    /*
-    SIDL = 0
-    TCKPS =0
-    T32   = 0
-    TCS = 0
-    */
-    T2CONSET = 0x0;
+    IC1CON = 0x2;
 
-    /* Clear counter */
-    TMR2 = 0x0;
 
-    /*Set period */
-    PR2 = 399U;
-
-    /* Enable TMR Interrupt */
-    //IEC0SET = _IEC0_T2IE_MASK;
-
+        IEC0SET = _IEC0_IC1IE_MASK;
 }
 
 
-void TMR2_Start(void)
+void ICAP1_Enable (void)
 {
-    T2CONSET = _T2CON_ON_MASK;
+    IC1CONSET = _IC1CON_ON_MASK;
 }
 
 
-void TMR2_Stop (void)
+void ICAP1_Disable (void)
 {
-    T2CONCLR = _T2CON_ON_MASK;
+    IC1CONCLR = _IC1CON_ON_MASK;
 }
 
-void TMR2_PeriodSet(uint16_t period)
+uint16_t ICAP1_CaptureBufferRead (void)
 {
-    PR2  = period;
-}
-
-uint16_t TMR2_PeriodGet(void)
-{
-    return (uint16_t)PR2;
-}
-
-uint16_t TMR2_CounterGet(void)
-{
-    return (uint16_t)(TMR2);
+    return (uint16_t)IC1BUF;
 }
 
 
-uint32_t TMR2_FrequencyGet(void)
+
+void ICAP1_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context)
 {
-    return (48000000);
+    icap1Obj.callback = callback;
+    icap1Obj.context = context;
 }
 
-
-void TIMER_2_InterruptHandler (void)
+void INPUT_CAPTURE_1_InterruptHandler(void)
 {
-    uint32_t status  = 0U;
-    status = IFS0bits.T2IF;
-    IFS0CLR = _IFS0_T2IF_MASK;
-
-    if((tmr2Obj.callback_fn != NULL))
+    if( (icap1Obj.callback != NULL))
     {
-        tmr2Obj.callback_fn(status, tmr2Obj.context);
+        icap1Obj.callback(icap1Obj.context);
     }
+    if ((IFS0 & _IFS0_IC1IF_MASK) && (IEC0 & _IEC0_IC1IE_MASK))
+    {
+        IFS0CLR = _IFS0_IC1IF_MASK;    //Clear IRQ flag
+    }
+    if ((IFS0 & _IFS0_IC1EIF_MASK) && (IEC0 & _IEC0_IC1EIE_MASK))
+    {
+        IFS0CLR = _IFS0_IC1EIF_MASK;    //Clear IRQ flag
+    }
+
 }
 
 
-void TMR2_InterruptEnable(void)
+bool ICAP1_ErrorStatusGet (void)
 {
-    IEC0SET = _IEC0_T2IE_MASK;
-}
-
-
-void TMR2_InterruptDisable(void)
-{
-    IEC0CLR = _IEC0_T2IE_MASK;
-}
-
-
-void TMR2_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context )
-{
-    /* Save callback_fn and context in local memory */
-    tmr2Obj.callback_fn = callback_fn;
-    tmr2Obj.context = context;
+    bool status = false;
+    status = ((IC1CON >> ICAP_STATUS_OVERFLOW) & 0x1);
+    return status;
 }

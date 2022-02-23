@@ -23,11 +23,11 @@ class TempSensor
     private:
 
         // static const uint8_t SIZE = 10;
-        uint8_t buffer_index = 0;
+        // uint8_t buffer_index = 0;
         bool SPI_INITIALIZED = false;
         bool READ_CELSIUS = false;
         uint8_t SENSOR_ID = 0;
-        // float buffer[SIZE];
+        // float buffer[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 };
 
 #endif	/* TEMPSENSOR_H */

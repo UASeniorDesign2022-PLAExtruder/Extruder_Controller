@@ -1,22 +1,22 @@
 /*******************************************************************************
-  TMR Peripheral Library Interface Source File
+  Input Capture (ICAP) Peripheral Library Interface Header File
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_tmr2.c
+    plib_icap_common.h
 
   Summary
-    TMR2 peripheral library source file.
+    Data Type definition of the ICAP Peripheral Interface Plib.
 
   Description
-    This file implements the interface to the TMR peripheral library.  This
-    library provides access to and control of the associated peripheral
-    instance.
+    This file defines the Data Types for the ICAP Plib.
+
+  Remarks:
+    None.
 
 *******************************************************************************/
-
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
@@ -42,106 +42,53 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
+#ifndef PLIB_ICAP_COMMON_H    // Guards against multiple inclusion
+#define PLIB_ICAP_COMMON_H
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files
+// Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
 
-#include "device.h"
-#include "plib_tmr2.h"
+/*  The following data type definitions are used by the functions in this
+    interface.
+*/
 
+// *****************************************************************************
 
-static TMR_TIMER_OBJECT tmr2Obj;
-
-
-void TMR2_Initialize(void)
+typedef enum
 {
-    /* Disable Timer */
-    T2CONCLR = _T2CON_ON_MASK;
+    ICAP_STATUS_OVERFLOW      = 0x4,
+    ICAP_STATUS_BUFNOTEMPTY   = 0x3
+} ICAP_STATUS_SOURCE;
 
-    /*
-    SIDL = 0
-    TCKPS =0
-    T32   = 0
-    TCS = 0
-    */
-    T2CONSET = 0x0;
+typedef void (*ICAP_CALLBACK) (uintptr_t context);
 
-    /* Clear counter */
-    TMR2 = 0x0;
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local: **** Do Not Use ****
+// *****************************************************************************
+// *****************************************************************************
 
-    /*Set period */
-    PR2 = 399U;
-
-    /* Enable TMR Interrupt */
-    //IEC0SET = _IEC0_T2IE_MASK;
-
-}
-
-
-void TMR2_Start(void)
+typedef struct
 {
-    T2CONSET = _T2CON_ON_MASK;
-}
+    ICAP_CALLBACK callback;
+    uintptr_t    context;
 
+} ICAP_OBJECT ;
 
-void TMR2_Stop (void)
-{
-    T2CONCLR = _T2CON_ON_MASK;
-}
-
-void TMR2_PeriodSet(uint16_t period)
-{
-    PR2  = period;
-}
-
-uint16_t TMR2_PeriodGet(void)
-{
-    return (uint16_t)PR2;
-}
-
-uint16_t TMR2_CounterGet(void)
-{
-    return (uint16_t)(TMR2);
-}
-
-
-uint32_t TMR2_FrequencyGet(void)
-{
-    return (48000000);
-}
-
-
-void TIMER_2_InterruptHandler (void)
-{
-    uint32_t status  = 0U;
-    status = IFS0bits.T2IF;
-    IFS0CLR = _IFS0_T2IF_MASK;
-
-    if((tmr2Obj.callback_fn != NULL))
-    {
-        tmr2Obj.callback_fn(status, tmr2Obj.context);
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
     }
-}
-
-
-void TMR2_InterruptEnable(void)
-{
-    IEC0SET = _IEC0_T2IE_MASK;
-}
-
-
-void TMR2_InterruptDisable(void)
-{
-    IEC0CLR = _IEC0_T2IE_MASK;
-}
-
-
-void TMR2_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context )
-{
-    /* Save callback_fn and context in local memory */
-    tmr2Obj.callback_fn = callback_fn;
-    tmr2Obj.context = context;
-}
+#endif
+// DOM-IGNORE-END
+#endif // PLIB_ACC_COMMON_H

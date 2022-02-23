@@ -1,4 +1,4 @@
-/*******************************************************************************
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    /*******************************************************************************
  * Extruder_Controller
  * extrusion_input.cpp
  * Wilson Woods
@@ -50,7 +50,7 @@ void EXTRUSION_INPUT_Tasks( void )
         {
             SPI_init();                             // initialize SPI for
             CORETIMER_DelayUs ( 50 );               // temp. sensor reading   
-            SP_TENSION_LED_OutputEnable();
+            // SP_TENSION_LED_OutputEnable();
             bool appInitialized = true;
 
             if( appInitialized )
@@ -69,16 +69,15 @@ void EXTRUSION_INPUT_Tasks( void )
             
             z1 = zone_1.read_temp();
             dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
-            z1 = 0;
             CORETIMER_DelayUs( 10 );
+            
             z2 = zone_2.read_temp();
             dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, z2 );
-            z2 = 0;
             CORETIMER_DelayUs( 10 );
+            
             z3 = zone_3.read_temp();
             dataManager.set_numeric_param( ZONE_3_TEMP_INDEX, z3 );
-            z3 = 0;
-            CORETIMER_DelayMs( 50 );
+            CORETIMER_DelayUs( 10 );
             
             break;
         }

@@ -36,6 +36,14 @@
                 <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c2_master.h</itemPath>
               </logicalFolder>
             </logicalFolder>
+            <logicalFolder name="f9" displayName="icap" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/icap/plib_icap_common.h</itemPath>
+              <itemPath>../src/config/default/peripheral/icap/plib_icap1.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f10" displayName="ocmp" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/ocmp/plib_ocmp_common.h</itemPath>
+              <itemPath>../src/config/default/peripheral/ocmp/plib_ocmp1.h</itemPath>
+            </logicalFolder>
             <logicalFolder name="f7" displayName="spi" projectFiles="true">
               <logicalFolder name="f1" displayName="spi_master" projectFiles="true">
                 <itemPath>../src/config/default/peripheral/spi/spi_master/plib_spi_master_common.h</itemPath>
@@ -146,6 +154,12 @@
                 <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c2_master.c</itemPath>
               </logicalFolder>
             </logicalFolder>
+            <logicalFolder name="f9" displayName="icap" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/icap/plib_icap1.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f10" displayName="ocmp" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/ocmp/plib_ocmp1.c</itemPath>
+            </logicalFolder>
             <logicalFolder name="f7" displayName="spi" projectFiles="true">
               <logicalFolder name="f1" displayName="spi_master" projectFiles="true">
                 <itemPath>../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c</itemPath>
@@ -213,12 +227,14 @@
         <itemPath>../src/config/default/default.mhc/tmr3.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/GraphSettings.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/i2c2.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/ocmp1.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/tmr2.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/core.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/spi1.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/FreeRTOS.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/i2c1.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/BSP_PIC32MX470_Curiosity_Development_Board.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/icap1.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/dfp.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/core_timer.yml</itemPath>
       </logicalFolder>

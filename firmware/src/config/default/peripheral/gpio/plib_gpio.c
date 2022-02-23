@@ -60,7 +60,7 @@ void GPIO_Initialize ( void )
     /* PORTB Initialization */
     LATB = 0x40c; /* Initial Latch Value */
     TRISBCLR = 0x40c; /* Direction Control */
-    ANSELBCLR = 0xc0c; /* Digital Mode Enable */
+    ANSELBCLR = 0x4c0c; /* Digital Mode Enable */
 
     /* PORTC Initialization */
 
@@ -89,6 +89,7 @@ void GPIO_Initialize ( void )
 
     /* PPS Input Remapping */
     SDI1R = 0;
+    IC1R = 2;
 
     /* PPS Output Remapping */
     RPD5R = 8;
