@@ -1,6 +1,19 @@
+
+*.d
+*.pre
+*.p1
+*.lst
+*.sym
+*.obj
+*.o
+*.sdb
+*.obj.dmp
+html/
 /firmware/Extruder_Controller.X/build/
+/firmware/Extruder_Controller.X/nbuild/
 /firmware/Extruder_Controller.X/dist/
 /firmware/Extruder_Controller.X/.generated_files/
 /firmware/Extruder_Controller.X/nbproject/private/
 /firmware/Extruder_Controller.X/nbproject/Makefile-*
+/firmware/Extruder_Controller.X/nbproject/Package-*.bash
 
