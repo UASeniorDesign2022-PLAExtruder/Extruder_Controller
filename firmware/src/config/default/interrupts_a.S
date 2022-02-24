@@ -52,37 +52,6 @@
 #include <xc.h>
 #include "ISR_Support.h"
 
-   .extern  INPUT_CAPTURE_1_Handler
-
-   .section .vector_5,code, keep
-   .equ     __vector_dispatch_5, IntVectorINPUT_CAPTURE_1_Handler
-   .global  __vector_dispatch_5
-   .set     nomicromips
-   .set     noreorder
-   .set     nomips16
-   .set     noat
-   .ent  IntVectorINPUT_CAPTURE_1_Handler
-
-IntVectorINPUT_CAPTURE_1_Handler:
-    la    $26,  _INPUT_CAPTURE_1_Handler
-    jr    $26
-    nop
-    .end    IntVectorINPUT_CAPTURE_1_Handler
-
-   .section .INPUT_CAPTURE_1_Handler_vector_text, code, keep
-   .set     nomicromips
-   .set     noreorder
-   .set     nomips16
-   .set     noat
-   .ent  _INPUT_CAPTURE_1_Handler
-
-_INPUT_CAPTURE_1_Handler:
-    portSAVE_CONTEXT
-    la    s6,  INPUT_CAPTURE_1_Handler
-    jalr  s6
-    nop
-    portRESTORE_CONTEXT
-    .end    _INPUT_CAPTURE_1_Handler
    .extern  OUTPUT_COMPARE_1_Handler
 
    .section .vector_6,code, keep

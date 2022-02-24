@@ -10,14 +10,17 @@
 #include "extrusion_control.h"
 #include "config/default/peripheral/i2c/master/plib_i2c1_master.h"
 #include "config/default/peripheral/tmr/plib_tmr2.h"
+#include "config/default/peripheral/tmr/plib_tmr3.h"
 #include "config/default/peripheral/coretimer/plib_coretimer.h"
 #include "config/default/peripheral/gpio/plib_gpio.h"
+#include "config/default/peripheral/icap/plib_icap1.h"
 
 #include "globals.h"
 #include "DataManager.h"
 #include "I2C.h"
 #include "I2CMotor.h"
 #include "pwm.h"
+
 
 /***************************** Initializations ********************************/
 
@@ -51,6 +54,13 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) T2_IntHandler (void)
 }
 */
 
+//Variables for Temp Pulse Input Capture
+uint16_t capturedValue[2];
+uint16_t capture = 0;
+uint16_t pulsePoint;
+volatile uint8_t captureIndex = 0;
+
+
 EXTRUSION_CONTROL_DATA extrusion_controlData;   // hold thread FSM state
 
 /******************************************************************************/
@@ -73,7 +83,11 @@ void EXTRUSION_CONTROL_Tasks( void )
             // ( and in turn lower PWM frequency )
             // larger period = lower PWM frequency
             
-            pwm_init(3999U, 1000U, TMR2_PRESCALE_32);
+            //Timer and Input Pulse for Temp
+            ICAP1_Enable();
+            TMR3_Start();
+            
+            pwm_init(7999U, 2000U, TMR2_PRESCALE_64);
             
             // PWM_OUT_1_Set();
             // PWM_OUT_2_Set();
@@ -103,6 +117,56 @@ void EXTRUSION_CONTROL_Tasks( void )
 
         case EXTRUSION_CONTROL_STATE_SERVICE_TASKS:
         {
+            while (1)
+            {
+                while(!ICAP1_CaptureStatusGet());
+
+                capturedValue[captureIndex++] = ICAP1_CaptureBufferRead();
+                if ( captureIndex > 1)
+                {
+                    pulsePoint = (capturedValue[1] - capturedValue[0])/2;
+                    captureIndex = 0;
+                }
+            }
+            /* typedef enum
+            {
+                //EXTRUSION_CONTROL_STATE_INIT=0,
+                //EXTRUSION_CONTROL_STATE_SERVICE_TASKS,
+                /* TODO: Define states used by the application state machine. 
+                TEMP_CONTROL_STATE_TO_STEADY_STATE=0,
+                TEMP_CONTROL_TEMP_CONTROL,
+                TEMP_CONTROL_OFF
+            } EXTRUSION_SUBSTATES;
+            enum for extrusion stage states
+             * i.e. heater on to steady state -> motor on -> temp. control
+             * -> motor off / cool down
+             *
+            EXTRUSION_SUBSTATES tempStage;
+            switch(tempStage)
+            {
+                case(TEMP_CONTROL_STATE_TO_STEADY_STATE):
+                {
+                    while (dataManager.get_numeric_param(ZONE_1_TEMP_INDEX < 320)
+                    {
+                        
+                    }
+                    
+                }
+                case(TEMP_CONTROL_TEMP_CONTROL):
+                case(TEMP_CONTROL_OFF):
+            }
+            */
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             /*
             zone1 = dataManager.get_numeric_param( ZONE_1_TEMP_INDEX );
             zone2 = dataManager.get_numeric_param( ZONE_2_TEMP_INDEX );
