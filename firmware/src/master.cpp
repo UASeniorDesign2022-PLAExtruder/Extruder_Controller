@@ -32,7 +32,7 @@ void MASTER_Tasks( void )
         case MASTER_STATE_INIT:
         {
             
-            // I2C_2_init();
+            I2C_2_init();
             bool appInitialized = true;
 
             if ( appInitialized )
@@ -47,11 +47,9 @@ void MASTER_Tasks( void )
              * TO DO: Implement process control flow state machine
              */
             
-            /*
             dataManager.poll_numeric_params();
             dataManager.send_all_fresh_numeric_params();
             CORETIMER_DelayUs( 50 ); 
-            */
             break;
         }
 

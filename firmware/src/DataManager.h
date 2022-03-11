@@ -3,6 +3,50 @@
  * DataManager.h
  * Wilson Woods
  * 11.18.2021
+ * 
+ * The dataManager class provides access to all data produced
+ * throughout the entire Extruder_Controller system. This includes motor speeds,
+ * sensor readings, and stage status values to indicate system progress. The
+ * dataManager collects provides access to this data across all threads (via
+ * atomic reads), and also sends all new values to the display controller
+ * via I2C. Each individual parameter is given a struct that contains its value
+ * along with a unique identifier to accompany the value when transmitted via
+ * I2C, and an internal flag that indicates whether the value is current or not.
+ * 
+ * Parameters are divided into 2 groups: Numeric (motor speeds, sensor readings,
+ * etc.) and Status (stage statuses and other non-numeric values). Numeric
+ * parameter structs are stored in the numeric_params vector and Status
+ * parameter structs are stored in the status_params vector.
+ * 
+ * During operation, any value that is changed is first updated in its
+ * respective struct, and its is_current value is set to false. Meanwhile, the
+ * dataManager class iterates through each vector (numeric_params and
+ * status_params) and automatically sends to the display via I2C any new values,
+ * and resets the is_current flag as it does so.
+ * 
+ ************************** Adding a new parameter *****************************
+ * 
+ * In order to add a new parameter the following steps must be taken:
+ *
+ *      1.) Determine whether this is a numeric or status parameter
+ * 
+ *      2.) In the case of a status parameter, ensure that the STATUS enum
+ *          has the required states for this parameter, if not, a new status/
+ *          statuses can be added below the last state currently listed
+ * 
+ *      3.) Increase the size of the appropriate parameter vector (either
+ *          NUMERIC_PARAM_COUNT or STATUS_PARAM_COUNT must be incremented to
+ *          accommodate the new parameter.
+ * 
+ *      4.) Create an instance of the appropriate parameter struct (either 
+ *          a Numeric_Param or Status_Param, follow the convention below for
+ *          naming and initial values)
+ * 
+ *      5.) Add the newly created struct to the end of appropriate vector
+ *          (either numeric_params or status_params)
+ * 
+ *      6.) The dataManager should now be able to handle the new parameter.
+ *          The display code must be updated independently to match the change.
  ******************************************************************************/
 
 #ifndef DATAMANAGER_H
@@ -46,15 +90,19 @@ class DataManager
         
         uint16_t spooler_tension = 0;
         
-        typedef union                   // convert between float and char[4]
+        // convert between float and char[4]
+        typedef union
         {
             uint8_t buffer[4];
             float numeric_param_input;
         } FloatToBytes;
 
-        FloatToBytes converter;
+        // use converter to send float values as integers via I2C
+        // convert back to float at the other end
+        FloatToBytes converter;         
 
-        typedef enum                    // status values
+        // list of possible status values for various process stages
+        typedef enum
         {
             NONE,
             READY,

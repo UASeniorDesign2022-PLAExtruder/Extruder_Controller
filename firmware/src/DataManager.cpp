@@ -3,6 +3,27 @@
  * DataManager.cpp
  * Wilson Woods
  * 11.18.2021
+ * 
+ * The dataManager class provides access to all data produced
+ * throughout the entire Extruder_Controller system. This includes motor speeds,
+ * sensor readings, and stage status values to indicate system progress. The
+ * dataManager collects provides access to this data across all threads (via
+ * atomic reads), and also sends all new values to the display controller
+ * via I2C. Each individual parameter is given a struct that contains its value
+ * along with a unique identifier to accompany the value when transmitted via
+ * I2C, and an internal flag that indicates whether the value is current or not.
+ * 
+ * Parameters are divided into 2 groups: Numeric (motor speeds, sensor readings,
+ * etc.) and Status (stage statuses and other non-numeric values). Numeric
+ * parameter structs are stored in the numeric_params vector and Status
+ * parameter structs are stored in the status_params vector.
+ * 
+ * During operation, any value that is changed is first updated in its
+ * respective struct, and its is_current value is set to false. Meanwhile, the
+ * dataManager class iterates through each vector (numeric_params and
+ * status_params) and automatically sends to the display via I2C any new values,
+ * and resets the is_current flag as it does so.
+ * 
  ********************************************************************************/
 
 #include <cstdint>

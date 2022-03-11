@@ -28,7 +28,7 @@ void SPI_init( void )
     SPI1CON = 0x8560;                       // PIC32 master, 16-bit mode
 }
 
-void SPI_transfer( char data )
+void SPI_transfer( uint8_t data )
 {
     SPI1BUF = ( 0x00FF & data );            // pass data to buffer
     while( !SPI1BUF );                      // wait for data to be sent out

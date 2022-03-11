@@ -12,6 +12,8 @@
 extern "C" {
 #endif
 
+// passed to T2CONSET register, pre-scale is defined by bits <6:4>
+// settings unchanged besides this, 16-bit mode, timer ON
 #define TMR2_PRESCALE_256    0x8070
 #define TMR2_PRESCALE_64     0x8060
 #define TMR2_PRESCALE_32     0x8050

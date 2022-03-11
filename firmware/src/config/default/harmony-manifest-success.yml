@@ -4,13 +4,13 @@
 
 
 project: Extruder_Controller
-creation_date: 2022-02-23T20:04:09.096-05:00[America/New_York]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
-operating_system: Windows 10
+creation_date: 2022-03-10T13:47:55.631-05:00[America/New_York]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+operating_system: Linux
 mhc_mode: IDE            # [IDE|Standalone|Headless]
-mhc_version: v3.8.2
-mplabx_version: v6.00        # if MPLAB X plugin only
+mhc_version: v3.8.1
+mplabx_version: v5.50        # if MPLAB X plugin only
 plugin_version: v3.6.4        # if MPLAB X plugin only
-compiler: XC32 (4.00)
+compiler: XC32 (3.01)
 
 modules:
     - {name: "csp", version: "v3.10.0"}

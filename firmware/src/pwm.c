@@ -11,6 +11,20 @@
 
 #include "pwm.h"
 
+/**
+ * pwm_init()
+ * 
+ * @param period Value assigned to PR2, this is the period of TMR2
+ * 
+ * @param initial_duty_cycle Any value from 0 to PR2 + 1, actual duty cycle
+ * (as a percentage) is given by ( intial_duty_cycle / period )
+ * 
+ * @param t2conset Value assigned to the T2CONSET register which is in turn
+ * written to T2CON. This is the configuration for the timer. In this case,
+ * we want 16-bit mode with the timer ON. USER TMR2_PRESCALE constants in
+ * pwm.h. They provide different pre-scale values and leave other settings
+ * unchanged.
+ */
 void pwm_init(unsigned int period, unsigned int initial_duty_cycle, unsigned int t2conset)
 {
     OC1CON = 0x0000;                // turn off OC1 module to configure
@@ -36,6 +50,17 @@ void pwm_init(unsigned int period, unsigned int initial_duty_cycle, unsigned int
     PWM_OUT_2_OutputEnable();       // direction control line 2
 }
 
+/**
+ * pwm_set_duty_cycle()
+ * 
+ * @param duty_cycle A value between 0 and PR2 + 1 where PR2 will be the value
+ * passed as period to pwm_init(). duty_cycle is passed to OC1RS (writable
+ * output compare register) and will be updated on the next interrupt.
+ * 
+ * duty_cycle =  PR2 + 1      == 100% duty cycle,
+ * duty_cycle = (PR2 + 1) / 2 ==  50% duty cycle,
+ * etc. 
+ */
 void pwm_set_duty_cycle(unsigned int duty_cycle)
 {
     OC1RS = duty_cycle;

@@ -3,28 +3,47 @@
  * extrusion_control.cpp
  * Wilson Woods
  * 11.25.2021
+ * 
+ * extrusion_control handles the control activities of the extrusion stage.
+ * This includes the main (screw) motor controlled directly by PWM,
+ * roller and spooling motors controlled by I2C motor controllers (PWM also),
+ * and the heating element (in progress).
  ******************************************************************************/
 
-#include <cstdint>
+#include <cstdint>                                      // unsigned int types
 
 #include "extrusion_control.h"
-#include "config/default/peripheral/i2c/master/plib_i2c1_master.h"
-#include "config/default/peripheral/tmr/plib_tmr2.h"
-#include "config/default/peripheral/tmr/plib_tmr3.h"
+#include "config/default/peripheral/tmr/plib_tmr2.h"    // PWM timer
+#include "config/default/peripheral/tmr/plib_tmr3.h"    // ICAP timer
 #include "config/default/peripheral/coretimer/plib_coretimer.h"
-#include "config/default/peripheral/gpio/plib_gpio.h"
-#include "config/default/peripheral/icap/plib_icap1.h"
+#include "config/default/peripheral/gpio/plib_gpio.h"       // GPIO macros
+#include "config/default/peripheral/icap/plib_icap1.h" // capture zero crossings
 
-#include "globals.h"
+#include "globals.h"            // parameter indexes, IDs
 #include "DataManager.h"
 #include "I2C.h"
 #include "I2CMotor.h"
-#include "pwm.h"
+#include "pwm.h"                // screw motor functions
 
 
 /***************************** Initializations ********************************/
 
-/*
+// enumeration of extrusion control sub-states
+typedef enum
+{
+    TEMP_TO_STEADY_STATE=0,
+    TEMP_CONTROL_ON,
+    TEMP_CONTROL_OFF
+} EXTRUSION_CONTROL_SUBSTATES;
+
+// struct to hold extrusion control sub-states
+// this is a Harmony convention
+typedef struct
+{
+    EXTRUSION_CONTROL_SUBSTATES substate;
+} CONTROL_SUBSTATE_DATA;
+            
+
 const uint8_t M1 = 0;        // refer to motors on either I2C controller
 const uint8_t M2 = 1;
 
@@ -40,34 +59,26 @@ uint16_t tension_upper_limit = 750;             // adjust for filament tension
 // local variables
 float roller_speed = 0;
 float spooler_speed = 0;
-float current_diameter = 0;
- * 
+float current_diameter = 0; 
 float zone1 = 0;
 float zone2 = 0;
 float zone3 = 0;
-*/
 
-/*
-void __ISR(_TIMER_2_VECTOR, IPL7AUTO) T2_IntHandler (void)
-{
-    IFS0CLR = 0x0100;
-}
-*/
-
-//Variables for Temp Pulse Input Capture
+// variables for temp pulse ICAP1
 uint16_t capturedValue[2];
 uint16_t capture = 0;
 uint16_t pulsePoint;
 volatile uint8_t captureIndex = 0;
 
-
 EXTRUSION_CONTROL_DATA extrusion_controlData;   // hold thread FSM state
+CONTROL_SUBSTATE_DATA control_substateData;     // hold control sub-state
 
 /******************************************************************************/
 
 void EXTRUSION_CONTROL_Initialize( void )
 {
     extrusion_controlData.state = EXTRUSION_CONTROL_STATE_INIT;
+    control_substateData.substate = TEMP_TO_STEADY_STATE;
 }
 
 void EXTRUSION_CONTROL_Tasks( void )
@@ -76,37 +87,42 @@ void EXTRUSION_CONTROL_Tasks( void )
     {
         case EXTRUSION_CONTROL_STATE_INIT:
         {
-            // initialize PWM with period (PR2) = 399
-            // initial duty cycle = 200 (50%) since
-            // max duty = PR2 + 1 = 400
-            // higher pre-scale = lower base frequency for TMR2
-            // ( and in turn lower PWM frequency )
-            // larger period = lower PWM frequency
+            //timer and input capture for temp
             
-            //Timer and Input Pulse for Temp
-            ICAP1_Enable();
-            TMR3_Start();
             
-            pwm_init(7999U, 2000U, TMR2_PRESCALE_64);
+            // ICAP1_Enable();
             
-            // PWM_OUT_1_Set();
-            // PWM_OUT_2_Set();
+            
+            // TMR3_Start();
+            
+            // TO DO: new PWM interface that can be initialized from a frequency
+            // in Hz instead of all these numbers
+            
+            // initialize PWM, start sending 25% duty cycle, ~ 940Hz
+           
+            // see pwm.h for TMR2_PRESCALE constants
+            
+            // pwm_init(7999U, 2000U, TMR2_PRESCALE_64);
+            
+            // I2C_1_init();       // initialize I2C1 module for motor controllers
+            // CORETIMER_DelayMs( 100 );
             
             /*
-            I2C_1_init();
-            CORETIMER_DelayMs( 100 );
-            rollers.stop(M1);
-            rollers.stop(M2);
-            spooler.stop(M1);
+            // all motors off
+            rollers.stop( M1 );         // roller 1
+            rollers.stop( M2 );         // roller 2
+            spooler.stop( M1 );         // spooler
             CORETIMER_DelayMs( 5000 );
 
-            rollers.set_speed( M1, 150 );
-            roller_speed = rollers.set_speed( M2, 150 );
-            spooler_speed = spooler.set_speed( M1, 150 );
+            // set initial roller and spoolers to 50% duty cycle
+            rollers.set_speed( M1, 128 );
+            roller_speed = rollers.set_speed( M2, 128 );
+            spooler_speed = spooler.set_speed( M1, 128 );
+            
+            // pass initial roller and spooler speeds to dataManager
             dataManager.set_numeric_param( ROLLER_SPEED_INDEX, roller_speed );
             dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_speed );
             */
-            
             bool appInitialized = true;
 
             if ( appInitialized )
@@ -117,91 +133,71 @@ void EXTRUSION_CONTROL_Tasks( void )
 
         case EXTRUSION_CONTROL_STATE_SERVICE_TASKS:
         {
-            while (1)
-            {
-                while(!ICAP1_CaptureStatusGet());
 
-                capturedValue[captureIndex++] = ICAP1_CaptureBufferRead();
-                if ( captureIndex > 1)
-                {
-                    pulsePoint = (capturedValue[1] - capturedValue[0])/2;
-                    captureIndex = 0;
-                }
+            /*
+            if (HEATER_RISING_EDGE_FOUND)
+            {
+                PWM_OUT_1_Set();
+                CORETIMER_DelayUs(10);
+                PWM_OUT_1_Clear();
+                HEATER_RISING_EDGE_FOUND = false;
             }
-            /* typedef enum
+            */
+            /* TO DO: implement sub-state FSM
+             * 
+             * state machine will hold temperature control logic
+             */
+            /*
+            switch( control_substateData.substate )
             {
-                //EXTRUSION_CONTROL_STATE_INIT=0,
-                //EXTRUSION_CONTROL_STATE_SERVICE_TASKS,
-                /* TODO: Define states used by the application state machine. 
-                TEMP_CONTROL_STATE_TO_STEADY_STATE=0,
-                TEMP_CONTROL_TEMP_CONTROL,
-                TEMP_CONTROL_OFF
-            } EXTRUSION_SUBSTATES;
-            enum for extrusion stage states
-             * i.e. heater on to steady state -> motor on -> temp. control
-             * -> motor off / cool down
-             *
-            EXTRUSION_SUBSTATES tempStage;
-            switch(tempStage)
-            {
-                case(TEMP_CONTROL_STATE_TO_STEADY_STATE):
+                case TEMP_TO_STEADY_STATE:
                 {
-                    while (dataManager.get_numeric_param(ZONE_1_TEMP_INDEX < 320)
+                    while( dataManager.get_numeric_param( ZONE_1_TEMP_INDEX < 320 ) )
                     {
                         
                     }
                     
+                    break;
                 }
-                case(TEMP_CONTROL_TEMP_CONTROL):
-                case(TEMP_CONTROL_OFF):
+                case TEMP_CONTROL_ON:
+                {
+                    break;
+                }
+                case TEMP_CONTROL_OFF:
+                {
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
             }
             */
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             /*
+            // test receiving temperatures from dataManager
             zone1 = dataManager.get_numeric_param( ZONE_1_TEMP_INDEX );
             zone2 = dataManager.get_numeric_param( ZONE_2_TEMP_INDEX );
             zone3 = dataManager.get_numeric_param( ZONE_3_TEMP_INDEX );
-            current_diameter = dataManager.get_numeric_param( DIAMETER_INDEX );
             */
+
+            /********************** test screw motor PWM **********************/
             
             /*
-            while(1)
-            {
-                pwm_set_duty_cycle(1000);
-                CORETIMER_DelayMs(1000);
+            pwm_set_duty_cycle(1000); // 12.5% duty
+            CORETIMER_DelayMs(1000);
 
-                pwm_set_duty_cycle(2000);
-                CORETIMER_DelayMs(1000);
+            pwm_set_duty_cycle(6000); // 75% duty
+            CORETIMER_DelayMs(1000);
 
-                pwm_set_duty_cycle(3000);
-                CORETIMER_DelayMs(1000);
+            pwm_set_duty_cycle(2000); // 25% duty
+            CORETIMER_DelayMs(1000);
 
-                pwm_set_duty_cycle(4000);
-                CORETIMER_DelayMs(1000);
-            }
-            */
-            /*
-            while(1)
-            {
-                spooler_speed = spooler.nudge_down(M1, 1);
-                rollers.nudge_down(M1, 1);
-                roller_speed = rollers.nudge_down(M2, 1);
-                dataManager.set_numeric_param( ROLLER_SPEED_INDEX, roller_speed );
-                dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_speed );
-                CORETIMER_DelayMs( 750 );
-            }
+            pwm_set_duty_cycle(4000); // 50% duty
+            CORETIMER_DelayMs(1000);
             */
             
+            /********************** test dynamic tensioning *******************/
             /*
             if ( dataManager.get_spooler_tension() > tension_upper_limit )
             {
@@ -209,27 +205,20 @@ void EXTRUSION_CONTROL_Tasks( void )
                 SP_TENSION_LED_Set();
                 // dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_speed );
             }
-            */
-            /*
             else if ( dataManager.get_spooler_tension() < tension_lower_limit )
             {
                 spooler_speed = spooler.nudge_up( M1, 1 );
                 SP_TENSION_LED_Set();
                 dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_speed );
             }
-            */
-            /*
             else
             {
                 SP_TENSION_LED_Clear();
             }
             */
-            CORETIMER_DelayMs( 500 );
+            /******************************************************************/
             
-            /*  
-             * TO DO: Implement feedback control
-             */
-            
+            // CORETIMER_DelayMs( 500 );
         }
 
         default:

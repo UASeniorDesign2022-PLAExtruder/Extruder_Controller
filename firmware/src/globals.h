@@ -17,6 +17,7 @@ extern "C" {
     
 extern DataManager dataManager;
 
+extern bool HEATER_RISING_EDGE_FOUND;
 extern bool I2C_1_IS_BUSY;
 extern bool I2C_2_IS_BUSY;
 

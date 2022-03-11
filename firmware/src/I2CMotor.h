@@ -3,7 +3,20 @@
  * I2CMotor.h
  * Wilson Woods
  * 11.19.2021
- ********************************************************************************/
+ * 
+ * The I2CMotor class provides an interface for controlling the SeeedStudio
+ * I2C motor controller using the PIC32MX470F512H:
+ * 
+ *      https://wiki.seeedstudio.com/Grove-I2C_Motor_Driver_V1.3/
+ * 
+ * Each controller uses PWM to control up to 2 12V DC motors. PWM frequency,
+ * motor speed, and motor direction can be controlled by the PIC32 by sending
+ * the appropriate flag bytes (to indicate frequency, speed, or direction)
+ * followed by the desired value corresponding to that flag. Each object of
+ * this class represents the interface of one controller, and therefore 
+ * controls up to 2 motors. The I2C address of controller is customizable
+ * using switches on the controller itself (see link above). 
+ ******************************************************************************/
 
 #ifndef I2CMOTOR_H
 #define	I2CMOTOR_H
@@ -37,6 +50,7 @@ class I2CMotor
         Motor_Object motor_1 = { MOTOR_1, 0, 1 };
         Motor_Object motor_2 = { MOTOR_2, 0, 1 };
         
+        // store motor objects in a vector in order to access by subscript
         std::vector<Motor_Object> motor_objects = { motor_1, motor_2 };
 
         // bytes for communicating with I2C motor controller
@@ -59,11 +73,13 @@ class I2CMotor
         uint8_t F_122Hz         = 0x04;
         uint8_t F_30Hz          = 0x05;
 
-        // speed 0 to 255
+        // speed -255 to 255 ( 0 = stop )
         unsigned char SPEED_MOTOR_1 = 0;
         unsigned char SPEED_MOTOR_2 = 0;
         
-        // clockwise = 1 | counterclockwise = -1
+        // clockwise = 1 | counterclockwise = -1, internal to class methods
+        // interface allows negative speed values to indicate direction
+        // functions interpolate behind the scenes
         int DIRECTION_MOTOR_1 = 1;
         int DIRECTION_MOTOR_2 = 1;
         

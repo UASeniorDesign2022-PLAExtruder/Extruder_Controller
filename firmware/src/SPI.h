@@ -22,7 +22,7 @@ void SPI_init( void );
  * SPI_transfer()
  * Send dummy byte to initiate SPI1 module master read
  */
-void SPI_transfer( char data );
+void SPI_transfer( uint8_t data );
 
 /**
  * SPI_read_temp_1()

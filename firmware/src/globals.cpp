@@ -11,6 +11,8 @@
 
 DataManager dataManager;
 
+bool HEATER_RISING_EDGE_FOUND = false;
+
 bool I2C_1_IS_BUSY = false;
 bool I2C_2_IS_BUSY = false;
 

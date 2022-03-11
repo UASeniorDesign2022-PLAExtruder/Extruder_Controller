@@ -136,21 +136,29 @@ uint16_t ICAP1_CaptureBufferRead (void);
 
 // *****************************************************************************
 /* Function:
-   void ICAP1_CaptureStatusGet (void)
+  void ICAP1_CallbackRegister( ICAP_CALLBACK callback, uintptr_t context )
 
   Summary:
-    ICAP1 status
+    Sets the callback function for a icap interrupt.
 
   Description:
-    Returns the current state overflow or buffer not empty flags
+    This function sets the callback function that will be called when the ICAP
+    conditions are met.
+
+  Precondition:
+    None.
 
   Parameters:
-    None
+    *callback   - a pointer to the function to be called when value is reached.
+                  Use NULL to Un Register the compare callback
+
+    context     - a pointer to user defined data to be used when the callback
+                  function is called. NULL can be passed in if no data needed.
 
   Returns:
-    bool
+    void
 */
-bool ICAP1_CaptureStatusGet (void);
+void ICAP1_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context);
 
 
 // *****************************************************************************

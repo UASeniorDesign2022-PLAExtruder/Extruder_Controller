@@ -3,13 +3,23 @@
  * TempSensor.h
  * Wilson Woods
  * 11.25.2021
+ * 
+ * The TempSensor class provides an interface for reading values from the
+ * MAX6675 temperature controller using the PIC32MX470F512H:
+ * 
+ *      https://cdn-shop.adafruit.com/datasheets/MAX6675.pdf
+ * 
+ * Each MAX6675 is connected to a type-k thermocouple and values from the
+ * interface are read via SPI. For each read, 2 bytes are read successively (1 
+ * read in 16-bit SPI mode). The 3 LSBs of the reading provide device ID and
+ * other state information, and are shifted to give the thermocouple reading
+ * in degrees Celsius.
  ******************************************************************************/
 
 #ifndef TEMPSENSOR_H
 #define	TEMPSENSOR_H
 
-#include <cstdint>
-#include <vector>
+#include <cstdint>      // unsigned int types
 
 class TempSensor
 {
