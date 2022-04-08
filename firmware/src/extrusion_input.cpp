@@ -56,8 +56,8 @@ void EXTRUSION_INPUT_Tasks( void )
         case EXTRUSION_INPUT_STATE_INIT:
         {
             
-            SPI_init();                             // initialize SPI for
-            CORETIMER_DelayUs ( 50 );               // temp. sensor reading
+            // SPI_init();                             // initialize SPI for
+            // CORETIMER_DelayUs ( 50 );               // temp. sensor reading
             /*
             SP_TENSION_LED_OutputEnable();          // LED ON 
             */
@@ -70,11 +70,13 @@ void EXTRUSION_INPUT_Tasks( void )
 
         case EXTRUSION_INPUT_STATE_SERVICE_TASKS:
         {
+            /*
             while (1)
             {
                 z1 = maxBoardRead();
                 dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
             }
+            */
             /*
             
             ADC_ConversionStart();                      // start ADC

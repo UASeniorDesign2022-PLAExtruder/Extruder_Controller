@@ -13,6 +13,18 @@ DataManager dataManager;
 
 bool HEATER_RISING_EDGE_FOUND = false;
 
+// base delay 450 is point of zero crossing (half way between rising and falling edges)
+const uint16_t HEATER_CONTROL_BASE_DELAY = 450;
+
+// half duty is 4155: 50% power (half way between zero crossings)
+const uint16_t HEATER_CONTROL_HALF_DUTY = 4155;
+
+// this is the value that controls the power output to the heater
+// initialized to 50% power (from above)
+uint16_t heater_power_control_delay = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_HALF_DUTY;
+
+float heater_duty_cycle = 0;
+
 bool I2C_1_IS_BUSY = false;
 bool I2C_2_IS_BUSY = false;
 

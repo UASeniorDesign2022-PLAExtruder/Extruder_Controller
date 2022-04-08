@@ -1,20 +1,23 @@
 /*******************************************************************************
-  Input Capture (ICAP1) Peripheral Library (PLIB)
+  TMR1 Peripheral Library Interface Source File
 
-  Company:
+  Company
     Microchip Technology Inc.
 
-  File Name:
-    plib_icap1.c
+  File Name
+    plib_tmr1.c
 
-  Summary:
-    ICAP1 Source File
+  Summary
+    TMR1 peripheral library source file.
 
-  Description:
-    None
+  Description
+    This file implements the interface to the TMR1 peripheral library.  This
+    library provides access to and control of the associated peripheral
+    instance.
 
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
@@ -37,79 +40,106 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-#include "plib_icap1.h"
-
-ICAP_OBJECT icap1Obj;
-// *****************************************************************************
+// DOM-IGNORE-END
 
 // *****************************************************************************
-// Section: ICAP1 Implementation
+// *****************************************************************************
+// Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
 
+#include "device.h"
+#include "plib_tmr1.h"
 
-void ICAP1_Initialize (void)
+static TMR1_TIMER_OBJECT tmr1Obj;
+
+void TMR1_Initialize(void)
 {
-    /*Setup IC1CON    */
-    /*ICM     = 6        */
-    /*ICI     = 0        */
-    /*ICTMR = 0*/
-    /*C32     = 0        */
-    /*FEDGE = 1        */
-    /*SIDL     = false    */
+    /* Disable Timer */
+    T1CONCLR = _T1CON_ON_MASK;
 
-    IC1CON = 0x206;
+    /*
+    SIDL = 0
+    TWDIS = 0
+    TGATE = 0
+    TCKPS = 0
+    TSYNC = 0
+    TCS = 0
+    */
+    T1CONSET = 0x0;
 
+    /* Clear counter */
+    TMR1 = 0x0;
 
-        IEC0SET = _IEC0_IC1IE_MASK;
+    /*Set period */
+    PR1 = 47;
+
+    /* Setup TMR1 Interrupt */
+    TMR1_InterruptEnable();  /* Enable interrupt on the way out */
 }
 
 
-void ICAP1_Enable (void)
+void TMR1_Start (void)
 {
-    IC1CONSET = _IC1CON_ON_MASK;
+    T1CONSET = _T1CON_ON_MASK;
 }
 
 
-void ICAP1_Disable (void)
+void TMR1_Stop (void)
 {
-    IC1CONCLR = _IC1CON_ON_MASK;
-}
-
-uint16_t ICAP1_CaptureBufferRead (void)
-{
-    return (uint16_t)IC1BUF;
+    T1CONCLR = _T1CON_ON_MASK;
 }
 
 
-
-void ICAP1_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context)
+void TMR1_PeriodSet(uint16_t period)
 {
-    icap1Obj.callback = callback;
-    icap1Obj.context = context;
+    PR1 = period;
 }
 
-void INPUT_CAPTURE_1_InterruptHandler(void)
+
+uint16_t TMR1_PeriodGet(void)
 {
-    if( (icap1Obj.callback != NULL))
+    return (uint16_t)PR1;
+}
+
+
+uint16_t TMR1_CounterGet(void)
+{
+    return(TMR1);
+}
+
+uint32_t TMR1_FrequencyGet(void)
+{
+    return (48000000);
+}
+
+void TIMER_1_InterruptHandler (void)
+{
+    uint32_t status = IFS0bits.T1IF;
+    IFS0CLR = _IFS0_T1IF_MASK;
+
+    if((tmr1Obj.callback_fn != NULL))
     {
-        icap1Obj.callback(icap1Obj.context);
+        tmr1Obj.callback_fn(status, tmr1Obj.context);
     }
-    if ((IFS0 & _IFS0_IC1IF_MASK) && (IEC0 & _IEC0_IC1IE_MASK))
-    {
-        IFS0CLR = _IFS0_IC1IF_MASK;    //Clear IRQ flag
-    }
-    if ((IFS0 & _IFS0_IC1EIF_MASK) && (IEC0 & _IEC0_IC1EIE_MASK))
-    {
-        IFS0CLR = _IFS0_IC1EIF_MASK;    //Clear IRQ flag
-    }
-
 }
 
 
-bool ICAP1_ErrorStatusGet (void)
+void TMR1_InterruptEnable(void)
 {
-    bool status = false;
-    status = ((IC1CON >> ICAP_STATUS_OVERFLOW) & 0x1);
-    return status;
+    IEC0SET = _IEC0_T1IE_MASK;
+}
+
+
+void TMR1_InterruptDisable(void)
+{
+    IEC0CLR = _IEC0_T1IE_MASK;
+}
+
+
+void TMR1_CallbackRegister( TMR1_CALLBACK callback_fn, uintptr_t context )
+{
+    /* - Save callback_fn and context in local memory */
+    tmr1Obj.callback_fn = callback_fn;
+    tmr1Obj.context = context;
 }

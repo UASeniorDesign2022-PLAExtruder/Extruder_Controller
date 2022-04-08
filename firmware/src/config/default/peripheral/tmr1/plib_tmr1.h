@@ -1,17 +1,20 @@
 /*******************************************************************************
-  Input Capture (ICAP1) Peripheral Library (PLIB)
+  Data Type definition of Timer PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_icap1.c
+    plib_tmr1.h
 
   Summary:
-    ICAP1 Source File
+    Data Type definition of the Timer Peripheral Interface Plib.
 
   Description:
-    None
+    This file defines the Data Types for the Timer Plib.
+
+  Remarks:
+    None.
 
 *******************************************************************************/
 
@@ -37,79 +40,62 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-#include "plib_icap1.h"
 
-ICAP_OBJECT icap1Obj;
+#ifndef PLIB_TMR1_H
+#define PLIB_TMR1_H
+
+#include <stddef.h>
+#include <stdint.h>
+#include "device.h"
+#include "plib_tmr1_common.h"
+
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
+// DOM-IGNORE-END
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
-// Section: ICAP1 Implementation
+// *****************************************************************************
+// Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
+// *****************************************************************************
+void TMR1_Initialize(void);
 
-void ICAP1_Initialize (void)
-{
-    /*Setup IC1CON    */
-    /*ICM     = 6        */
-    /*ICI     = 0        */
-    /*ICTMR = 0*/
-    /*C32     = 0        */
-    /*FEDGE = 1        */
-    /*SIDL     = false    */
+void TMR1_Start(void);
 
-    IC1CON = 0x206;
+void TMR1_Stop(void);
 
+void TMR1_PeriodSet(uint16_t);
 
-        IEC0SET = _IEC0_IC1IE_MASK;
-}
+uint16_t TMR1_PeriodGet(void);
 
+uint16_t TMR1_CounterGet(void);
 
-void ICAP1_Enable (void)
-{
-    IC1CONSET = _IC1CON_ON_MASK;
-}
+uint32_t TMR1_FrequencyGet(void);
 
+void TMR1_InterruptEnable(void);
 
-void ICAP1_Disable (void)
-{
-    IC1CONCLR = _IC1CON_ON_MASK;
-}
+void TMR1_InterruptDisable(void);
 
-uint16_t ICAP1_CaptureBufferRead (void)
-{
-    return (uint16_t)IC1BUF;
-}
+void TMR1_CallbackRegister( TMR1_CALLBACK callback_fn, uintptr_t context );
 
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
 
-
-void ICAP1_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context)
-{
-    icap1Obj.callback = callback;
-    icap1Obj.context = context;
-}
-
-void INPUT_CAPTURE_1_InterruptHandler(void)
-{
-    if( (icap1Obj.callback != NULL))
-    {
-        icap1Obj.callback(icap1Obj.context);
     }
-    if ((IFS0 & _IFS0_IC1IF_MASK) && (IEC0 & _IEC0_IC1IE_MASK))
-    {
-        IFS0CLR = _IFS0_IC1IF_MASK;    //Clear IRQ flag
-    }
-    if ((IFS0 & _IFS0_IC1EIF_MASK) && (IEC0 & _IEC0_IC1EIE_MASK))
-    {
-        IFS0CLR = _IFS0_IC1EIF_MASK;    //Clear IRQ flag
-    }
+#endif
+// DOM-IGNORE-END
 
-}
-
-
-bool ICAP1_ErrorStatusGet (void)
-{
-    bool status = false;
-    status = ((IC1CON >> ICAP_STATUS_OVERFLOW) & 0x1);
-    return status;
-}
+#endif /* PLIB_TMR1_H */

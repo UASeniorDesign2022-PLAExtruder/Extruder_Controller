@@ -23,9 +23,9 @@ void SPI_init( void )
     IFS1CLR = 0x8;
     IFS1CLR = 0x10;
     IFS1CLR = 0x20;
-    SPI1BRG = 23;                           // 1MHz clock
+    SPI1BRG = 8;                           // 4MHz clock
     SPI1STATCLR = _SPI1STAT_SPIROV_MASK;
-    SPI1CON = 0x8560;                       // PIC32 master, 16-bit mode
+    SPI1CON = 0x8720;                       // PIC32 master, 16-bit mode
 }
 
 void SPI_transfer( uint8_t data )

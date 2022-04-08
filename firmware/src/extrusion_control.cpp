@@ -88,12 +88,10 @@ void EXTRUSION_CONTROL_Tasks( void )
         case EXTRUSION_CONTROL_STATE_INIT:
         {
             //timer and input capture for temp
-            
-            
-            // ICAP1_Enable();
-            
-            
-            // TMR3_Start();
+           
+            ICAP1_Enable();
+            TMR3_Start();
+            PWM_OUT_1_OutputEnable();
             
             // TO DO: new PWM interface that can be initialized from a frequency
             // in Hz instead of all these numbers
@@ -102,7 +100,7 @@ void EXTRUSION_CONTROL_Tasks( void )
            
             // see pwm.h for TMR2_PRESCALE constants
             
-            // pwm_init(7999U, 2000U, TMR2_PRESCALE_64);
+            pwm_init(7999U, 2000U, TMR2_PRESCALE_64);
             
             // I2C_1_init();       // initialize I2C1 module for motor controllers
             // CORETIMER_DelayMs( 100 );
@@ -134,6 +132,8 @@ void EXTRUSION_CONTROL_Tasks( void )
         case EXTRUSION_CONTROL_STATE_SERVICE_TASKS:
         {
 
+            
+            heater_duty_cycle = 0.25; 
             /*
             if (HEATER_RISING_EDGE_FOUND)
             {

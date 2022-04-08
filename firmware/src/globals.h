@@ -18,6 +18,14 @@ extern "C" {
 extern DataManager dataManager;
 
 extern bool HEATER_RISING_EDGE_FOUND;
+
+extern const uint16_t HEATER_CONTROL_BASE_DELAY;
+extern const uint16_t HEATER_CONTROL_HALF_DUTY;
+
+extern uint16_t heater_power_control_delay;
+
+extern float heater_duty_cycle;
+
 extern bool I2C_1_IS_BUSY;
 extern bool I2C_2_IS_BUSY;
 

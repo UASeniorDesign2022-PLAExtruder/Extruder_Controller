@@ -60,6 +60,7 @@
 #include "bsp/bsp.h"
 #include "peripheral/tmr/plib_tmr2.h"
 #include "peripheral/tmr/plib_tmr3.h"
+#include "peripheral/tmr1/plib_tmr1.h"
 #include "peripheral/spi/spi_master/plib_spi1_master.h"
 #include "FreeRTOS.h"
 #include "task.h"
