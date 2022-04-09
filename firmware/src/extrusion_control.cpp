@@ -91,7 +91,7 @@ void EXTRUSION_CONTROL_Tasks( void )
            
             ICAP1_Enable();
             TMR3_Start();
-            PWM_OUT_1_OutputEnable();
+            HEATER_CONTROL_1_OutputEnable();
             
             // TO DO: new PWM interface that can be initialized from a frequency
             // in Hz instead of all these numbers
@@ -133,7 +133,7 @@ void EXTRUSION_CONTROL_Tasks( void )
         {
 
             
-            heater_duty_cycle = 0.25; 
+            // heater_duty_cycle = 0.25; 
             /*
             if (HEATER_RISING_EDGE_FOUND)
             {

@@ -25,22 +25,24 @@ void SPI_init( void )
     IFS1CLR = 0x20;
     SPI1BRG = 8;                           // 4MHz clock
     SPI1STATCLR = _SPI1STAT_SPIROV_MASK;
-    SPI1CON = 0x8720;                       // PIC32 master, 16-bit mode
+    SPI1CON = 0x8320;                       // PIC32 master, 16-bit mode
 }
 
-void SPI_transfer( uint8_t data )
+char SPI_transfer( char data )
 {
     SPI1BUF = ( 0x00FF & data );            // pass data to buffer
-    while( !SPI1BUF );                      // wait for data to be sent out
+    while (SPI1STATbits.SPIRBE);
+    return (char)SPI1BUF;
+    // while( !SPI1BUF );                      // wait for data to be sent out
 }
 
 int SPI_read_temp_1( void )
 {
-    SPI1CONbits.DISSDO = 1;
+    // SPI1CONbits.DISSDO = 1;
     SS_TEMP_1_Clear();                      // slave select low
     SPI_transfer( 0x00 );                   // send dummy byte
     CORETIMER_DelayUs( 16 );                // wait 16 cycles for 2 bytes
-    SPI1CONbits.DISSDO = 0;
+    // SPI1CONbits.DISSDO = 0;
     SS_TEMP_1_Set();                        // slave select high
     return ( SPI1BUF );                     // read incoming data from buffer
 }

@@ -27,19 +27,19 @@
 #define ADC_VREF        (5.0f)  
 #define ADC_MAX_COUNT   (1023U)
 
-float z1 = 0; 
+ 
 
-/*
+
 TempSensor zone_1( 1 );                     // temperature sensor objects
-TempSensor zone_2( 2 );
-TempSensor zone_3( 3 );
+// TempSensor zone_2( 2 );
+// TempSensor zone_3( 3 );
 
 // local variables
-                              // zone temperatures
-float z2 = 0;
-float z3 = 0;
+float z1 = 0;                               // zone temperatures
+//float z2 = 0;
+//float z3 = 0;
 uint16_t adc;                               // pressure sensor reading
-*/
+
 EXTRUSION_INPUT_DATA extrusion_inputData;   // hold thread FSM state
 
 /******************************************************************************/
@@ -56,8 +56,8 @@ void EXTRUSION_INPUT_Tasks( void )
         case EXTRUSION_INPUT_STATE_INIT:
         {
             
-            // SPI_init();                             // initialize SPI for
-            // CORETIMER_DelayUs ( 50 );               // temp. sensor reading
+            SPI_init();                             // initialize SPI for
+            CORETIMER_DelayUs ( 50 );               // temp. sensor reading
             /*
             SP_TENSION_LED_OutputEnable();          // LED ON 
             */
@@ -70,35 +70,38 @@ void EXTRUSION_INPUT_Tasks( void )
 
         case EXTRUSION_INPUT_STATE_SERVICE_TASKS:
         {
-            /*
-            while (1)
-            {
-                z1 = maxBoardRead();
-                dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
-            }
-            */
-            /*
             
+
+//            MAX31865_init();
+//            z1 = maxBoardRead();
+//            dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
+
+            
+            /*
             ADC_ConversionStart();                      // start ADC
             while( !ADC_ResultIsReady() );              // wait for result
             adc = ADC_ResultGet( ADC_RESULT_BUFFER_0 ); // store ADC reading
             dataManager.set_spooler_tension( adc );     // pass to dataManager
+            */
             
             // read and store zone 1 temperature
-            z1 = zone_1.read_temp();
-            dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
-            CORETIMER_DelayUs( 10 );
-            
+//            z1 = zone_1.read_temp();
+//            dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
+//            z1 = 0;
+//            CORETIMER_DelayUs( 10 );
+//            
             // read and store zone 2 temperature
-            z2 = zone_2.read_temp();
-            dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, z2 );
-            CORETIMER_DelayUs( 10 );
+//            z2 = zone_2.read_temp();
+//            dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, z2 );
+//            z2 = 0;
+//            CORETIMER_DelayUs( 10 );
+//            
+//            // read and store zone 3 temperature
+//            z3 = zone_3.read_temp();
+//            dataManager.set_numeric_param( ZONE_3_TEMP_INDEX, z3 );
+//            z3 = 0;
+//            CORETIMER_DelayUs( 10 );
             
-            // read and store zone 3 temperature
-            z3 = zone_3.read_temp();
-            dataManager.set_numeric_param( ZONE_3_TEMP_INDEX, z3 );
-            CORETIMER_DelayUs( 10 );
-            */
             break;
         }
 

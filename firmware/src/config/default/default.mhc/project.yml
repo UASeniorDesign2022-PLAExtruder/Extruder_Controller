@@ -132,13 +132,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 482303059B973FEF2E95E85481D679F9
-- generatedChecksum: 655599D733767DF351F7B5D3BA589200
+- generatedChecksum: B409D1E669BAECD9FED5A4418697BBA7
   logicalPath: config/default/peripheral/gpio
   name: plib_gpio.c
   physicalPath: peripheral/gpio
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 655599D733767DF351F7B5D3BA589200
+  userChecksum: B409D1E669BAECD9FED5A4418697BBA7
 - generatedChecksum: 0E9E2184684DE378DDCA581B8F9C0F4C
   logicalPath: config/default/peripheral/i2c/master
   name: plib_i2c1_master.c
@@ -419,13 +419,13 @@ files:
   security: NON_SECURE
   type: HEADER
   userChecksum: A2CC849C687144A046545E8CF6188343
-- generatedChecksum: 0D1530FEB451CE20D27D3E1EFC794C13
+- generatedChecksum: 4F5A3B7934EE050BB124B23AF34FE937
   logicalPath: config/default/peripheral/gpio
   name: plib_gpio.h
   physicalPath: peripheral/gpio
   security: NON_SECURE
   type: HEADER
-  userChecksum: 0D1530FEB451CE20D27D3E1EFC794C13
+  userChecksum: 4F5A3B7934EE050BB124B23AF34FE937
 - generatedChecksum: D6ECFE797E49453D076C8DF185763EB9
   logicalPath: config/default/peripheral/i2c/master
   name: plib_i2c1_master.h

@@ -62,23 +62,32 @@
 // *****************************************************************************
 
 
-/*** Macros for PWM_OUT_2 pin ***/
-#define PWM_OUT_2_Set()               (LATGSET = (1<<6))
-#define PWM_OUT_2_Clear()             (LATGCLR = (1<<6))
-#define PWM_OUT_2_Toggle()            (LATGINV= (1<<6))
-#define PWM_OUT_2_OutputEnable()      (TRISGCLR = (1<<6))
-#define PWM_OUT_2_InputEnable()       (TRISGSET = (1<<6))
-#define PWM_OUT_2_Get()               ((PORTG >> 6) & 0x1)
-#define PWM_OUT_2_PIN                  GPIO_PIN_RG6
+/*** Macros for HEATER_CONTROL_2 pin ***/
+#define HEATER_CONTROL_2_Set()               (LATGSET = (1<<6))
+#define HEATER_CONTROL_2_Clear()             (LATGCLR = (1<<6))
+#define HEATER_CONTROL_2_Toggle()            (LATGINV= (1<<6))
+#define HEATER_CONTROL_2_OutputEnable()      (TRISGCLR = (1<<6))
+#define HEATER_CONTROL_2_InputEnable()       (TRISGSET = (1<<6))
+#define HEATER_CONTROL_2_Get()               ((PORTG >> 6) & 0x1)
+#define HEATER_CONTROL_2_PIN                  GPIO_PIN_RG6
 
-/*** Macros for PWM_OUT_1 pin ***/
-#define PWM_OUT_1_Set()               (LATGSET = (1<<9))
-#define PWM_OUT_1_Clear()             (LATGCLR = (1<<9))
-#define PWM_OUT_1_Toggle()            (LATGINV= (1<<9))
-#define PWM_OUT_1_OutputEnable()      (TRISGCLR = (1<<9))
-#define PWM_OUT_1_InputEnable()       (TRISGSET = (1<<9))
-#define PWM_OUT_1_Get()               ((PORTG >> 9) & 0x1)
-#define PWM_OUT_1_PIN                  GPIO_PIN_RG9
+/*** Macros for HEATER_CONTROL_1 pin ***/
+#define HEATER_CONTROL_1_Set()               (LATGSET = (1<<9))
+#define HEATER_CONTROL_1_Clear()             (LATGCLR = (1<<9))
+#define HEATER_CONTROL_1_Toggle()            (LATGINV= (1<<9))
+#define HEATER_CONTROL_1_OutputEnable()      (TRISGCLR = (1<<9))
+#define HEATER_CONTROL_1_InputEnable()       (TRISGSET = (1<<9))
+#define HEATER_CONTROL_1_Get()               ((PORTG >> 9) & 0x1)
+#define HEATER_CONTROL_1_PIN                  GPIO_PIN_RG9
+
+/*** Macros for HEATER_CONTROL_3 pin ***/
+#define HEATER_CONTROL_3_Set()               (LATBSET = (1<<8))
+#define HEATER_CONTROL_3_Clear()             (LATBCLR = (1<<8))
+#define HEATER_CONTROL_3_Toggle()            (LATBINV= (1<<8))
+#define HEATER_CONTROL_3_OutputEnable()      (TRISBCLR = (1<<8))
+#define HEATER_CONTROL_3_InputEnable()       (TRISBSET = (1<<8))
+#define HEATER_CONTROL_3_Get()               ((PORTB >> 8) & 0x1)
+#define HEATER_CONTROL_3_PIN                  GPIO_PIN_RB8
 
 /*** Macros for SP_TENSION_ADC pin ***/
 #define SP_TENSION_ADC_Get()               ((PORTB >> 9) & 0x1)

@@ -44,10 +44,7 @@ void pwm_init(unsigned int period, unsigned int initial_duty_cycle, unsigned int
     T2CONSET  = t2conset;           // pick TMR2_PRESCALE values from pwm.h        
                                     
     OC1CONSET = 0x8000;             // enable OC1
-    
-    // maybe unnecessary but no harm in having them
-    PWM_OUT_1_OutputEnable();       // direction control line 1
-    PWM_OUT_2_OutputEnable();       // direction control line 2
+  
 }
 
 /**

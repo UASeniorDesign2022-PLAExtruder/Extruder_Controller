@@ -29,8 +29,8 @@ uint16_t MAX31865_read16(int regno)
    SS_TEMP_1_Clear();  
    //output_low(MAX31865_CS); //Active-Low Chip Select. Set CS low to enable the serial interface.
    CORETIMER_DelayUs(1);
-   SPI_transfer(regno);   //Send the register number
-   rtd = SPI_read_temp_1();   // Clock out 16 dummy bits and read the reply
+   rtd = SPI_transfer(regno);   //Send the register number
+   // rtd = SPI_read_temp_1();   // Clock out 16 dummy bits and read the reply
    CORETIMER_DelayUs(1);
    SS_TEMP_1_Set();
    //output_high(MAX31865_CS);    //From CS high to cycle complete
@@ -45,14 +45,24 @@ uint8_t MAX31865_read8(int regno)
    SS_TEMP_1_Clear(); //Active-Low Chip Select. Set CS low to enable the serial interface.
    CORETIMER_DelayUs(1);
    SPI_transfer(regno);   //Send the register number
-   rtd = SPI_read_temp_1();     // Clock out 8 dummy bits and read the reply
+   // rtd = SPI_read_temp_1();     // Clock out 8 dummy bits and read the reply
+   rtd = SPI_transfer(regno);
    CORETIMER_DelayUs(1);
    SS_TEMP_1_Set();   //From CS high to cycle complete
    return(rtd);
 }
 
 //Version for data register - Two 8-bit registers, RTD MSBs and RTD LSBs, contain the RTD resistance data and reads MSB first
-#define MAX31865_read_data() MAX31865_read16(MAX31856_RTDMSB_REG_READ)
+// #define MAX31865_read_data() MAX31865_read16(MAX31856_RTDMSB_REG_READ)
+
+uint16_t MAX31865_read_data()
+{
+    uint16_t data = 0;
+    data = MAX31865_read8(MAX31856_RTDMSB_REG_READ);
+    data <<= 8;
+    data |= MAX31865_read8(MAX31856_RTDLSB_REG_READ);
+    return data;  
+}
 
 //---------------------------------------
 // Call this function to write an 8-bit value to a MAX31865 register.
@@ -85,7 +95,7 @@ float CallendarVanDusen(float rt)
    
    if(rt == 0)
    {
-       temp =0;
+       temp = 0;
    }
    CORETIMER_DelayUs(1);
    return (temp);
@@ -100,7 +110,7 @@ void MAX31865_init(void)
 
 float maxBoardRead()
 {
-   float Rref = 470.0;
+   float Rref = 430.0;
    uint16_t result = 0;
    float Temperature_VoltRes = 0;
    // uint16_t temp; 

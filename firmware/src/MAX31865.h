@@ -55,7 +55,9 @@ extern "C" {
                                                 //D1 and D0 Dont Matter
 /***************************************************************************************/
 
+uint8_t MAX31865_read8(int regno);
 uint16_t MAX31865_read16(int regno);
+uint16_t MAX31865_read_data();
 void MAX31865_write_register(uint8_t reg_address, uint8_t value);
 float CallendarVanDusen(float rt);
 void MAX31865_init(void);

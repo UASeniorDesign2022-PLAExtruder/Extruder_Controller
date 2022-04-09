@@ -41,3 +41,4 @@ class TempSensor
 };
 
 #endif	/* TEMPSENSOR_H */
+ 

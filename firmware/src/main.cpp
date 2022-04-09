@@ -116,9 +116,9 @@ void ICAP1_EventHandler(uintptr_t context)
         // heater_duty_delay = (uint16_t) icap_period_us * heater_duty_cycle;
         // CORETIMER_DelayUs(icap_pulse_midpoint_us);
         CORETIMER_DelayUs(heater_power_control_delay);
-        PWM_OUT_1_Set();
-        CORETIMER_DelayUs(10);
-        PWM_OUT_1_Clear();
+        HEATER_CONTROL_1_Set();
+        CORETIMER_DelayUs(100);
+        HEATER_CONTROL_1_Clear();
     }
     ++icap_count;
     if (icap_count > 1)
@@ -138,6 +138,7 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     TMR1_Initialize();
+    heater_power_control_delay = 2500;
     
     TMR2_CallbackRegister(TIMER2_EventHandler,(uintptr_t)NULL);
     ICAP1_CallbackRegister(ICAP1_EventHandler,(uintptr_t)NULL);

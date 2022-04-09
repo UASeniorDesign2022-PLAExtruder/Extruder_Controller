@@ -33,6 +33,34 @@ children:
       - type: User
         attributes: {value: High}
   - type: String
+    attributes: {id: BSP_PIN_21_DIR}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: Out}
+  - type: String
+    attributes: {id: BSP_PIN_21_FUNCTION_NAME}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: HEATER_CONTROL_3}
+  - type: String
+    attributes: {id: BSP_PIN_21_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: GPIO}
+  - type: String
+    attributes: {id: BSP_PIN_21_MODE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: DIGITAL}
+  - type: String
     attributes: {id: BSP_PIN_22_FUNCTION_NAME}
     children:
     - type: Values
@@ -276,7 +304,7 @@ children:
     - type: Values
       children:
       - type: User
-        attributes: {value: PWM_OUT_2}
+        attributes: {value: HEATER_CONTROL_2}
   - type: String
     attributes: {id: BSP_PIN_4_FUNCTION_TYPE}
     children:
@@ -493,7 +521,7 @@ children:
     - type: Values
       children:
       - type: User
-        attributes: {value: PWM_OUT_1}
+        attributes: {value: HEATER_CONTROL_1}
   - type: String
     attributes: {id: BSP_PIN_8_FUNCTION_TYPE}
     children:
@@ -1448,7 +1476,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '19468'}
+        attributes: {id: core, value: '19724'}
   - type: Hex
     attributes: {id: SYS_PORT_B_CNPD}
     children:
@@ -1483,7 +1511,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '1036'}
+        attributes: {id: core, value: '1292'}
   - type: Hex
     attributes: {id: SYS_PORT_D_ANSEL}
     children:
