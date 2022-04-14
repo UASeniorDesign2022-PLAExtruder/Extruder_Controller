@@ -44,7 +44,7 @@ uint8_t MAX31865_read8(int regno)
 
    SS_TEMP_1_Clear(); //Active-Low Chip Select. Set CS low to enable the serial interface.
    CORETIMER_DelayUs(1);
-   SPI_transfer(regno);   //Send the register number
+   // SPI_transfer(regno);   //Send the register number
    // rtd = SPI_read_temp_1();     // Clock out 8 dummy bits and read the reply
    rtd = SPI_transfer(regno);
    CORETIMER_DelayUs(1);
@@ -58,7 +58,7 @@ uint8_t MAX31865_read8(int regno)
 uint16_t MAX31865_read_data()
 {
     uint16_t data = 0;
-    data = MAX31865_read8(MAX31856_RTDMSB_REG_READ);
+    data |= MAX31865_read8(MAX31856_RTDMSB_REG_READ);
     data <<= 8;
     data |= MAX31865_read8(MAX31856_RTDLSB_REG_READ);
     return data;  

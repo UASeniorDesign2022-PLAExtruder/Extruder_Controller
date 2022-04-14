@@ -20,7 +20,8 @@
 #include "SPI.h"
 #include "TempSensor.h"
 #include "DataManager.h"
-#include "MAX31865.h"
+// #include "MAX31865.h"
+#include "RTD.h"
 
 /***************************** Initializations ********************************/
 
@@ -30,7 +31,7 @@
  
 
 
-TempSensor zone_1( 1 );                     // temperature sensor objects
+// TempSensor zone_1( 1 );                     // temperature sensor objects
 // TempSensor zone_2( 2 );
 // TempSensor zone_3( 3 );
 
@@ -55,9 +56,13 @@ void EXTRUSION_INPUT_Tasks( void )
     {
         case EXTRUSION_INPUT_STATE_INIT:
         {
+//            SS_TEMP_1_OutputEnable();
+//            SS_TEMP_1_Set();
+            // RTD_begin(MAX31865_3WIRE);
+            //SPI_RTD_init();
+            // SPI_init();
             
-            SPI_init();                             // initialize SPI for
-            CORETIMER_DelayUs ( 50 );               // temp. sensor reading
+            // CORETIMER_DelayUs ( 50 );
             /*
             SP_TENSION_LED_OutputEnable();          // LED ON 
             */
@@ -71,18 +76,28 @@ void EXTRUSION_INPUT_Tasks( void )
         case EXTRUSION_INPUT_STATE_SERVICE_TASKS:
         {
             
+            // setWires(MAX31865_3WIRE);
+            // enableBias(false);
+//            RTD_begin(MAX31865_3WIRE);
+            
+            // z1 = temperature(RNOMINAL, RREF);
+//            uint16_t raw_res = readRTD();
+//            raw_res = raw_res / 2;
+//            z1 = (raw_res * 430) / 32768;
+            z1 = get_temp();
+            
+            //z1 = maxBoardRead();
+            
 
-//            MAX31865_init();
-//            z1 = maxBoardRead();
-//            dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
+            dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
 
             
-            /*
-            ADC_ConversionStart();                      // start ADC
-            while( !ADC_ResultIsReady() );              // wait for result
-            adc = ADC_ResultGet( ADC_RESULT_BUFFER_0 ); // store ADC reading
-            dataManager.set_spooler_tension( adc );     // pass to dataManager
-            */
+            
+//            ADC_ConversionStart();                      // start ADC
+//            while( !ADC_ResultIsReady() );              // wait for result
+//            adc = ADC_ResultGet( ADC_RESULT_BUFFER_0 ); // store ADC reading
+//            dataManager.set_spooler_tension( adc );     // pass to dataManager
+            
             
             // read and store zone 1 temperature
 //            z1 = zone_1.read_temp();

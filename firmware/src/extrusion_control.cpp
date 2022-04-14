@@ -198,24 +198,24 @@ void EXTRUSION_CONTROL_Tasks( void )
             */
             
             /********************** test dynamic tensioning *******************/
-            /*
-            if ( dataManager.get_spooler_tension() > tension_upper_limit )
-            {
-                // spooler_speed = spooler.nudge_down( M1, 1 );
-                SP_TENSION_LED_Set();
-                // dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_speed );
-            }
-            else if ( dataManager.get_spooler_tension() < tension_lower_limit )
-            {
-                spooler_speed = spooler.nudge_up( M1, 1 );
-                SP_TENSION_LED_Set();
-                dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_speed );
-            }
-            else
-            {
-                SP_TENSION_LED_Clear();
-            }
-            */
+            
+//            if ( dataManager.get_spooler_tension() > tension_upper_limit )
+//            {
+//                // spooler_speed = spooler.nudge_down( M1, 1 );
+//                SP_TENSION_LED_Set();
+//                // dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_speed );
+//            }
+//            else if ( dataManager.get_spooler_tension() < tension_lower_limit )
+//            {
+//                // spooler_speed = spooler.nudge_up( M1, 1 );
+//                SP_TENSION_LED_Set();
+//                // dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_speed );
+//            }
+//            else
+//            {
+//                SP_TENSION_LED_Clear();
+//            }
+            
             /******************************************************************/
             
             // CORETIMER_DelayMs( 500 );
