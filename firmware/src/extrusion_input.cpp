@@ -21,7 +21,8 @@
 #include "TempSensor.h"
 #include "DataManager.h"
 // #include "MAX31865.h"
-#include "RTD.h"
+// #include "RTD.h"
+#include "RTDSensor.h"
 
 /***************************** Initializations ********************************/
 
@@ -30,6 +31,15 @@
 
  
 
+typedef enum max31865_numwires
+{
+  MAX31865_2WIRE = 0,
+  MAX31865_3WIRE = 1,
+  MAX31865_4WIRE = 0
+} max31865_numwires_t;
+
+
+RTDSensor RTD_zone_1;
 
 // TempSensor zone_1( 1 );                     // temperature sensor objects
 // TempSensor zone_2( 2 );
@@ -58,7 +68,6 @@ void EXTRUSION_INPUT_Tasks( void )
         {
 //            SS_TEMP_1_OutputEnable();
 //            SS_TEMP_1_Set();
-            // RTD_begin(MAX31865_3WIRE);
             //SPI_RTD_init();
             // SPI_init();
             
@@ -84,7 +93,7 @@ void EXTRUSION_INPUT_Tasks( void )
 //            uint16_t raw_res = readRTD();
 //            raw_res = raw_res / 2;
 //            z1 = (raw_res * 430) / 32768;
-            z1 = get_temp();
+            z1 = RTD_zone_1.get_temp();
             
             //z1 = maxBoardRead();
             
