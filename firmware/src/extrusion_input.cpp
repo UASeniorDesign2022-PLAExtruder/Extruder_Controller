@@ -54,9 +54,9 @@ typedef enum max31865_numwires
 // TempSensor zone_3( 3 );
 
 // local variables
-float z2 = 0;                               // zone temperatures
-//float z2 = 0;
-//float z3 = 0;
+float z1 = 0;                               // zone temperatures
+float z2 = 0;
+float z3 = 0;
 uint16_t adc;                               // pressure sensor reading
 
 EXTRUSION_INPUT_DATA extrusion_inputData;   // hold thread FSM state
@@ -108,15 +108,15 @@ void EXTRUSION_INPUT_Tasks( void )
 //              dataManager.set_numeric_param( ZONE_3_TEMP_INDEX, temp_3 );
               
               
+            z1 = RTD_sensors.get_temp_CS_1();
+            dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
+            CORETIMER_DelayUs(10);
             z2 = RTD_sensors.get_temp_CS_2();
             dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, z2 );
-            CORETIMER_DelayUs(10);
-//            z2 = RTD_sensors.get_temp_CS_2();
-//            dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, z2 );
-//            CORETIMER_DelayUs(100);
-//            z3 = RTD_sensors.get_temp_CS_3();
-//            dataManager.set_numeric_param( ZONE_3_TEMP_INDEX, z3 );
-//            CORETIMER_DelayUs(100);
+            CORETIMER_DelayUs(100);
+            z3 = RTD_sensors.get_temp_CS_3();
+            dataManager.set_numeric_param( ZONE_3_TEMP_INDEX, z3 );
+            CORETIMER_DelayUs(100);
 //            
             
             

@@ -91,12 +91,12 @@ void EXTRUSION_CONTROL_Tasks( void )
     switch ( extrusion_controlData.state )
     {
         case EXTRUSION_CONTROL_STATE_INIT:
-       
+        {
             //timer and input capture for temp
            
             ICAP1_Enable();
             TMR3_Start();
-            HEATER_CONTROL_1_OutputEnable();
+            //HEATER_CONTROL_1_OutputEnable();
             
             // TO DO: new PWM interface that can be initialized from a frequency
             // in Hz instead of all these numbers

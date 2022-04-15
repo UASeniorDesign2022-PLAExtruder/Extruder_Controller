@@ -15,9 +15,9 @@ bool HEATER_RISING_EDGE_FOUND = false;
 
 // this is the value that controls the power output to the heater
 // initialized to 50% power (from above)
-uint16_t heater_power_control_delay = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_HALF_DUTY_CYCLE;
+//uint16_t heater_power_control_delay = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_HALF_DUTY_CYCLE;
 
-float heater_duty_cycle = 0;
+//float heater_duty_cycle = 0;
 
 float temp_1 = 0;
 float temp_2 = 0;
@@ -42,8 +42,8 @@ const uint16_t HEATER_CONTROL_THREE_QUARTER_DUTY_CYCLE = 2078;// this is the val
 // initialized to 50% power (from above)
 
 uint16_t heater_power_control_delay_Z1 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_FULL_DUTY_CYCLE;
-uint16_t heater_power_control_delay_Z2 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_FULL_DUTY_CYCLE;
-uint16_t heater_power_control_delay_Z3 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_FULL_DUTY_CYCLE;
+uint16_t heater_power_control_delay_Z2 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_HALF_DUTY_CYCLE;
+uint16_t heater_power_control_delay_Z3 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_ONE_QUARTER_DUTY_CYCLE;
 
 //uint16_t heater_power_control_delay_Z1 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_FULL_DUTY_CYCLE;
 //uint16_t heater_power_control_delay_Z2 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_HALF_DUTY_CYCLE;

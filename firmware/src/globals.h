@@ -19,9 +19,9 @@ extern DataManager dataManager;
 
 extern bool HEATER_RISING_EDGE_FOUND;
 
-extern uint16_t heater_power_control_delay;
+//extern uint16_t heater_power_control_delay;
 
-extern float heater_duty_cycle;
+//extern float heater_duty_cycle;
 
 extern float temp_1;
 extern float temp_2;
@@ -38,7 +38,9 @@ extern const uint16_t HEATER_CONTROL_BASE_DELAY;
 extern const uint16_t HEATER_CONTROL_FULL_DUTY_CYCLE;
 extern const uint16_t HEATER_CONTROL_HALF_DUTY_CYCLE;
 extern const uint16_t HEATER_CONTROL_ONE_QUARTER_DUTY_CYCLE;
-extern const uint16_t HEATER_CONTROL_THREE_QUARTER_DUTY_CYCLE;extern uint16_t heater_power_control_delay_Z1;
+extern const uint16_t HEATER_CONTROL_THREE_QUARTER_DUTY_CYCLE;
+
+extern uint16_t heater_power_control_delay_Z1;
 extern uint16_t heater_power_control_delay_Z2;
 extern uint16_t heater_power_control_delay_Z3;
 

@@ -113,35 +113,32 @@ void ICAP1_EventHandler(uintptr_t context)
     
     if (icap_count == 0)
     {
-        CORETIMER_DelayUs(heater_power_control_delay_Z3);
-        HEATER_CONTROL_1_Set();
-        HEATER_CONTROL_2_Set();
-        HEATER_CONTROL_3_Set();
-
-
-
-        CORETIMER_DelayUs(100);
-        HEATER_CONTROL_1_Clear();
-        HEATER_CONTROL_2_Clear();
-        HEATER_CONTROL_3_Clear();
+//        CORETIMER_DelayUs(heater_power_control_delay_Z1);
+//        HEATER_CONTROL_1_Set();
+//        HEATER_CONTROL_2_Set();
+//        HEATER_CONTROL_3_Set();
+//
+//        CORETIMER_DelayUs(100);
+//        HEATER_CONTROL_1_Clear();
+//        HEATER_CONTROL_2_Clear();
+//        HEATER_CONTROL_3_Clear();
         
-    // CORETIMER_DelayUs(heater_power_control_delay_Z1-100);
-    // HEATER_CONTROL_1_Set();
-    // HEATER_CONTROL_2_Set();
-    // CORETIMER_DelayUs(100);
-    // HEATER_CONTROL_1_Clear();
-    // HEATER_CONTROL_2_Clear();
+     CORETIMER_DelayUs(heater_power_control_delay_Z1-100);
+     HEATER_CONTROL_1_Set();
+     //HEATER_CONTROL_2_Set();
+     CORETIMER_DelayUs(100);
+     HEATER_CONTROL_1_Clear();
+     //HEATER_CONTROL_2_Clear();
 
-
-    // CORETIMER_DelayUs(heater_power_control_delay_Z2 - heater_power_control_delay_Z1-100);
-    // HEATER_CONTROL_2_Set();
-    // CORETIMER_DelayUs(100);
-    // HEATER_CONTROL_2_Clear();
-    //
-    // CORETIMER_DelayUs(heater_power_control_delay_Z3 - heater_power_control_delay_Z2 - 100 - 100);
-    // HEATER_CONTROL_3_Set();
-    // CORETIMER_DelayUs(100);
-    // HEATER_CONTROL_3_Clear();
+     CORETIMER_DelayUs(heater_power_control_delay_Z2 - heater_power_control_delay_Z1-100);
+     HEATER_CONTROL_2_Set();
+     CORETIMER_DelayUs(100);
+     HEATER_CONTROL_2_Clear();
+    
+     CORETIMER_DelayUs(heater_power_control_delay_Z3 - heater_power_control_delay_Z2 - 100 - 100);
+     HEATER_CONTROL_3_Set();
+     CORETIMER_DelayUs(100);
+     HEATER_CONTROL_3_Clear();
     }
     ++icap_count;
     if (icap_count > 1)
@@ -166,7 +163,7 @@ int main ( void )
     HEATER_CONTROL_2_OutputEnable();
     HEATER_CONTROL_3_OutputEnable();
 
-    heater_power_control_delay = 2500;
+    //heater_power_control_delay = 2500;
     
     TMR2_CallbackRegister(TIMER2_EventHandler,(uintptr_t)NULL);
     ICAP1_CallbackRegister(ICAP1_EventHandler,(uintptr_t)NULL);
