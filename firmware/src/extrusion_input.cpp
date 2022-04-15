@@ -20,16 +20,22 @@
 #include "SPI.h"
 #include "TempSensor.h"
 #include "DataManager.h"
-// #include "MAX31865.h"
-// #include "RTD.h"
 #include "RTDSensor.h"
 
 /***************************** Initializations ********************************/
 
+#define R_NOMINAL_100       100.0
+#define R_REF_430           430.0
+
+#define R_NOMINAL_1000      1000.0
+#define R_REF_4300          4300.0
+
+
+
 #define ADC_VREF        (5.0f)  
 #define ADC_MAX_COUNT   (1023U)
 
- 
+
 
 typedef enum max31865_numwires
 {
@@ -39,14 +45,16 @@ typedef enum max31865_numwires
 } max31865_numwires_t;
 
 
-RTDSensor RTD_zone_1;
+ RTDSensor RTD_sensors;
+// RTDSensor RTD_zone_2(2, R_NOMINAL_100, R_REF_430);
+// RTDSensor RTD_zone_3(3,  R_NOMINAL_100, R_REF_430);
 
 // TempSensor zone_1( 1 );                     // temperature sensor objects
 // TempSensor zone_2( 2 );
 // TempSensor zone_3( 3 );
 
 // local variables
-float z1 = 0;                               // zone temperatures
+float z2 = 0;                               // zone temperatures
 //float z2 = 0;
 //float z3 = 0;
 uint16_t adc;                               // pressure sensor reading
@@ -70,7 +78,7 @@ void EXTRUSION_INPUT_Tasks( void )
 //            SS_TEMP_1_Set();
             //SPI_RTD_init();
             // SPI_init();
-            
+            // RTD_begin(MAX31865_3WIRE);
             // CORETIMER_DelayUs ( 50 );
             /*
             SP_TENSION_LED_OutputEnable();          // LED ON 
@@ -93,13 +101,23 @@ void EXTRUSION_INPUT_Tasks( void )
 //            uint16_t raw_res = readRTD();
 //            raw_res = raw_res / 2;
 //            z1 = (raw_res * 430) / 32768;
-            z1 = RTD_zone_1.get_temp();
             
-            //z1 = maxBoardRead();
-            
-
-            dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
-
+//              RTD_sensors.get_all_temps();
+//              dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, temp_1 );
+//              dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, temp_2 );
+//              dataManager.set_numeric_param( ZONE_3_TEMP_INDEX, temp_3 );
+              
+              
+            z2 = RTD_sensors.get_temp_CS_2();
+            dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, z2 );
+            CORETIMER_DelayUs(10);
+//            z2 = RTD_sensors.get_temp_CS_2();
+//            dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, z2 );
+//            CORETIMER_DelayUs(100);
+//            z3 = RTD_sensors.get_temp_CS_3();
+//            dataManager.set_numeric_param( ZONE_3_TEMP_INDEX, z3 );
+//            CORETIMER_DelayUs(100);
+//            
             
             
 //            ADC_ConversionStart();                      // start ADC

@@ -19,17 +19,30 @@ extern DataManager dataManager;
 
 extern bool HEATER_RISING_EDGE_FOUND;
 
-extern const uint16_t HEATER_CONTROL_BASE_DELAY;
-extern const uint16_t HEATER_CONTROL_HALF_DUTY;
-
 extern uint16_t heater_power_control_delay;
 
 extern float heater_duty_cycle;
 
+extern float temp_1;
+extern float temp_2;
+extern float temp_3;
+
 extern bool I2C_1_IS_BUSY;
 extern bool I2C_2_IS_BUSY;
 
+extern bool SPI_IS_BUSY;
+
 extern uint16_t global_spooler_tension;
+
+extern const uint16_t HEATER_CONTROL_BASE_DELAY;
+extern const uint16_t HEATER_CONTROL_FULL_DUTY_CYCLE;
+extern const uint16_t HEATER_CONTROL_HALF_DUTY_CYCLE;
+extern const uint16_t HEATER_CONTROL_ONE_QUARTER_DUTY_CYCLE;
+extern const uint16_t HEATER_CONTROL_THREE_QUARTER_DUTY_CYCLE;extern uint16_t heater_power_control_delay_Z1;
+extern uint16_t heater_power_control_delay_Z2;
+extern uint16_t heater_power_control_delay_Z3;
+
+
 
 /*************************** Numeric Parameter IDs ****************************/
 extern const uint8_t DESIRED_YIELD_INDEX;

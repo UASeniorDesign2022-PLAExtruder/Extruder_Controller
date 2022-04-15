@@ -134,7 +134,7 @@ void I2CMotor::set_motor_direction( uint8_t motor_directions )
  * 
  * @return new speed setting for the given motor
  */
-float I2CMotor::set_speed( unsigned char motor_id, unsigned short new_speed )
+float I2CMotor::set_speed( unsigned char motor_id, short new_speed )
 {
     char new_direction = 1;
     
@@ -183,7 +183,7 @@ float I2CMotor::set_speed( unsigned char motor_id, unsigned short new_speed )
     CORETIMER_DelayUs( 200 );
     
     // return the new speed
-    return ((float)motor_objects[motor_id].current_speed);
+    return ((float)motor_objects[motor_id].current_speed / 255) * 100;
 }
 
 /**

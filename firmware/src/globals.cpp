@@ -13,22 +13,42 @@ DataManager dataManager;
 
 bool HEATER_RISING_EDGE_FOUND = false;
 
-// base delay 450 is point of zero crossing (half way between rising and falling edges)
-const uint16_t HEATER_CONTROL_BASE_DELAY = 450;
-
-// half duty is 4155: 50% power (half way between zero crossings)
-const uint16_t HEATER_CONTROL_HALF_DUTY = 4155;
-
 // this is the value that controls the power output to the heater
 // initialized to 50% power (from above)
-uint16_t heater_power_control_delay = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_HALF_DUTY;
+uint16_t heater_power_control_delay = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_HALF_DUTY_CYCLE;
 
 float heater_duty_cycle = 0;
+
+float temp_1 = 0;
+float temp_2 = 0;
+float temp_3 = 0;
+
 
 bool I2C_1_IS_BUSY = false;
 bool I2C_2_IS_BUSY = false;
 
+bool SPI_IS_BUSY = false;
 uint16_t global_spooler_tension = 0;
+
+
+
+// base delay 450 is point of zero crossing (half way between rising and falling edges)
+const uint16_t HEATER_CONTROL_BASE_DELAY = 450;// half duty is 4155: 50% power (half way between zero crossings)
+//
+const uint16_t HEATER_CONTROL_FULL_DUTY_CYCLE = 0;
+const uint16_t HEATER_CONTROL_HALF_DUTY_CYCLE = 4155;
+const uint16_t HEATER_CONTROL_ONE_QUARTER_DUTY_CYCLE = 6233;
+const uint16_t HEATER_CONTROL_THREE_QUARTER_DUTY_CYCLE = 2078;// this is the value that controls the power output to the heater
+// initialized to 50% power (from above)
+
+uint16_t heater_power_control_delay_Z1 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_FULL_DUTY_CYCLE;
+uint16_t heater_power_control_delay_Z2 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_FULL_DUTY_CYCLE;
+uint16_t heater_power_control_delay_Z3 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_FULL_DUTY_CYCLE;
+
+//uint16_t heater_power_control_delay_Z1 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_FULL_DUTY_CYCLE;
+//uint16_t heater_power_control_delay_Z2 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_HALF_DUTY_CYCLE;
+//uint16_t heater_power_control_delay_Z3 = HEATER_CONTROL_BASE_DELAY + HEATER_CONTROL_ONE_QUARTER_DUTY_CYCLE;
+
 
 /*************************** Numeric Parameter IDs ****************************/
 

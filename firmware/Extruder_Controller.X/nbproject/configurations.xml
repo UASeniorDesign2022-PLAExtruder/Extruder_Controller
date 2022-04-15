@@ -119,6 +119,8 @@
       <itemPath>../src/TempSensor.h</itemPath>
       <itemPath>../src/pwm.h</itemPath>
       <itemPath>../src/MAX31865.h</itemPath>
+      <itemPath>/home/wilson/HarmonyProjects/zzzzz/Extruder_Controller/firmware/src/RTD.h</itemPath>
+      <itemPath>/home/wilson/HarmonyProjects/zzzzz/Extruder_Controller/firmware/src/RTDSensor.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -224,6 +226,8 @@
       <itemPath>../src/TempSensor.cpp</itemPath>
       <itemPath>../src/pwm.c</itemPath>
       <itemPath>../src/MAX31865.c</itemPath>
+      <itemPath>/home/wilson/HarmonyProjects/zzzzz/Extruder_Controller/firmware/src/RTD.cpp</itemPath>
+      <itemPath>/home/wilson/HarmonyProjects/zzzzz/Extruder_Controller/firmware/src/RTDSensor.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

@@ -59,10 +59,15 @@ uint16_t tension_upper_limit = 750;             // adjust for filament tension
 // local variables
 float roller_speed = 0;
 float spooler_speed = 0;
+float screw_speed = 0;
+unsigned int screw_period = 7999;
+unsigned int screw_duty_cycle = 6000;
 float current_diameter = 0; 
 float zone1 = 0;
 float zone2 = 0;
 float zone3 = 0;
+
+
 
 // variables for temp pulse ICAP1
 uint16_t capturedValue[2];
@@ -86,7 +91,7 @@ void EXTRUSION_CONTROL_Tasks( void )
     switch ( extrusion_controlData.state )
     {
         case EXTRUSION_CONTROL_STATE_INIT:
-        {
+       
             //timer and input capture for temp
            
             ICAP1_Enable();
@@ -100,12 +105,15 @@ void EXTRUSION_CONTROL_Tasks( void )
            
             // see pwm.h for TMR2_PRESCALE constants
             
-            pwm_init(7999U, 2000U, TMR2_PRESCALE_64);
+            pwm_init(screw_period, screw_duty_cycle, TMR2_PRESCALE_64);
+            screw_speed = ((float)screw_duty_cycle / (float) screw_period) * 100;
+            dataManager.set_numeric_param( SCREW_SPEED_INDEX, screw_speed );
             
-            // I2C_1_init();       // initialize I2C1 module for motor controllers
-            // CORETIMER_DelayMs( 100 );
             
-            /*
+            I2C_1_init();       // initialize I2C1 module for motor controllers
+            CORETIMER_DelayMs( 100 );
+            
+            
             // all motors off
             rollers.stop( M1 );         // roller 1
             rollers.stop( M2 );         // roller 2
@@ -113,14 +121,14 @@ void EXTRUSION_CONTROL_Tasks( void )
             CORETIMER_DelayMs( 5000 );
 
             // set initial roller and spoolers to 50% duty cycle
-            rollers.set_speed( M1, 128 );
-            roller_speed = rollers.set_speed( M2, 128 );
-            spooler_speed = spooler.set_speed( M1, 128 );
+            rollers.set_speed( M1, -220 );
+            roller_speed = rollers.set_speed( M2, -220 );
+            spooler_speed = spooler.set_speed( M1, -220 );
             
             // pass initial roller and spooler speeds to dataManager
             dataManager.set_numeric_param( ROLLER_SPEED_INDEX, roller_speed );
             dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_speed );
-            */
+            
             bool appInitialized = true;
 
             if ( appInitialized )
@@ -132,17 +140,7 @@ void EXTRUSION_CONTROL_Tasks( void )
         case EXTRUSION_CONTROL_STATE_SERVICE_TASKS:
         {
 
-            
-            // heater_duty_cycle = 0.25; 
-            /*
-            if (HEATER_RISING_EDGE_FOUND)
-            {
-                PWM_OUT_1_Set();
-                CORETIMER_DelayUs(10);
-                PWM_OUT_1_Clear();
-                HEATER_RISING_EDGE_FOUND = false;
-            }
-            */
+            dataManager.set_numeric_param( SCREW_SPEED_INDEX, screw_speed );
             /* TO DO: implement sub-state FSM
              * 
              * state machine will hold temperature control logic
