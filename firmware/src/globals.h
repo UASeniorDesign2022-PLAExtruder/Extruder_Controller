@@ -8,24 +8,20 @@
 #ifndef GLOBALS_H
 #define	GLOBALS_H
 
-#include <cstdint>
 #include "DataManager.h"
+#include "stdbool.h"
+
 
 #ifdef	__cplusplus
 extern "C" {
 #endif
-    
+
 extern DataManager dataManager;
 
-extern bool HEATER_RISING_EDGE_FOUND;
-
-extern uint16_t heater_power_control_delay;
-
-extern float heater_duty_cycle;
-
-extern float temp_1;
-extern float temp_2;
-extern float temp_3;
+extern bool BUTTON_1_PRESSED;
+extern bool BUTTON_2_PRESSED;
+extern bool BUTTON_3_PRESSED;
+extern bool BUTTON_4_PRESSED;
 
 extern bool I2C_1_IS_BUSY;
 extern bool I2C_2_IS_BUSY;
@@ -34,11 +30,53 @@ extern bool SPI_IS_BUSY;
 
 extern uint16_t global_spooler_tension;
 
+/******************************************************************************/
+/***************************** TEMPERATURE CONTROL ****************************/
+/******************************************************************************/
+
+extern bool HEATER_CONTROL_ON;
+
+extern bool ZONE_1_ACTIVE;
+extern bool ZONE_2_ACTIVE;
+extern bool ZONE_3_ACTIVE;
+
+extern const bool TURN_ON_ZONE_1;
+extern const bool TURN_ON_ZONE_2;
+extern const bool TURN_ON_ZONE_3;
+
+extern const bool TURN_OFF_ZONE_1;
+extern const bool TURN_OFF_ZONE_2;
+extern const bool TURN_OFF_ZONE_3;
+
+extern float actual_temp_1;
+extern float actual_temp_2;
+extern float actual_temp_3;
+
+extern const uint16_t target_temp_zone_1;
+extern const uint16_t target_temp_zone_2;
+extern const uint16_t target_temp_zone_3;
+
+extern const uint16_t pulse_delay;
+extern uint16_t variable_delay_zone_1;
+extern uint16_t variable_delay_zone_2;
+extern uint16_t variable_delay_zone_3;
+extern uint16_t current_delay_zone_1;
+extern uint16_t current_delay_zone_2;
+extern uint16_t current_delay_zone_3;
+
+extern uint16_t first_delay;
+extern uint16_t second_delay;
+extern uint16_t third_delay;
+
 extern const uint16_t HEATER_CONTROL_BASE_DELAY;
 extern const uint16_t HEATER_CONTROL_FULL_DUTY_CYCLE;
 extern const uint16_t HEATER_CONTROL_HALF_DUTY_CYCLE;
+extern const uint16_t HEATER_CONTROL_FIVE_PERCENT;
 extern const uint16_t HEATER_CONTROL_ONE_QUARTER_DUTY_CYCLE;
-extern const uint16_t HEATER_CONTROL_THREE_QUARTER_DUTY_CYCLE;extern uint16_t heater_power_control_delay_Z1;
+extern const uint16_t HEATER_CONTROL_THREE_QUARTER_DUTY_CYCLE;
+
+extern uint16_t heater_power_control_delay;
+extern uint16_t heater_power_control_delay_Z1;
 extern uint16_t heater_power_control_delay_Z2;
 extern uint16_t heater_power_control_delay_Z3;
 
@@ -72,14 +110,18 @@ extern const uint8_t ROLLER_SPEED_ID;
 extern const uint8_t SPOOLER_SPEED_INDEX;
 extern const uint8_t SPOOLER_SPEED_ID;
 
-extern const uint8_t DIAMETER_INDEX;
-extern const uint8_t DIAMETER_ID;
+extern const uint8_t HEATER_1_INDEX;
+extern const uint8_t HEATER_1_ID;
 
-extern const uint8_t EXTRUDED_LENGTH_INDEX;
-extern const uint8_t EXTRUDED_LENGTH_ID;
+extern const uint8_t HEATER_2_INDEX;
+extern const uint8_t HEATER_2_ID;
 
 extern const uint8_t PROJECTED_YIELD_INDEX;
 extern const uint8_t PROJECTED_YIELD_ID;
+
+extern const uint8_t HEATER_3_INDEX;
+extern const uint8_t HEATER_3_ID;
+
 
 /**************************** Status Parameter IDs ****************************/
 extern const uint8_t HOPPER_LID_STATUS_INDEX;

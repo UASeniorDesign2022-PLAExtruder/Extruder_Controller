@@ -18,7 +18,7 @@
 #include "extrusion_input.h"
 #include "globals.h"                                            // dataManager
 #include "SPI.h"
-#include "TempSensor.h"
+// #include "TempSensor.h"
 #include "DataManager.h"
 #include "RTDSensor.h"
 
@@ -45,8 +45,7 @@ typedef enum max31865_numwires
 } max31865_numwires_t;
 
 
- RTDSensor RTD_sensors;
-// RTDSensor RTD_zone_2(2, R_NOMINAL_100, R_REF_430);
+RTDSensor RTD_zone_2(R_NOMINAL_100, R_REF_430, SS_TEMP_1_PIN);
 // RTDSensor RTD_zone_3(3,  R_NOMINAL_100, R_REF_430);
 
 // TempSensor zone_1( 1 );                     // temperature sensor objects
@@ -54,7 +53,7 @@ typedef enum max31865_numwires
 // TempSensor zone_3( 3 );
 
 // local variables
-float z2 = 0;                               // zone temperatures
+float z1 = 0;                               // zone temperatures
 //float z2 = 0;
 //float z3 = 0;
 uint16_t adc;                               // pressure sensor reading
@@ -108,8 +107,8 @@ void EXTRUSION_INPUT_Tasks( void )
 //              dataManager.set_numeric_param( ZONE_3_TEMP_INDEX, temp_3 );
               
               
-            z2 = RTD_sensors.get_temp_CS_2();
-            dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, z2 );
+            z1 = RTD_zone_2.get_temp();
+            dataManager.set_numeric_param( ZONE_1_TEMP_INDEX, z1 );
             CORETIMER_DelayUs(10);
 //            z2 = RTD_sensors.get_temp_CS_2();
 //            dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, z2 );

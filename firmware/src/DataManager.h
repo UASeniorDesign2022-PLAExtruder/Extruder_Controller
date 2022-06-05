@@ -55,7 +55,6 @@
 #include <cstdint>
 #include <vector>
 #include <utility>
-#include <tuple>
 
       
 class DataManager
@@ -130,7 +129,7 @@ class DataManager
             bool is_current;            // status flag
         } Status_Param;
         
-        const uint8_t NUMERIC_PARAM_COUNT = 12; // length of numeric_params[]
+        const uint8_t NUMERIC_PARAM_COUNT = 13; // length of numeric_params[]
         const uint8_t STATUS_PARAM_COUNT = 4;   // length of status_params[]
         
         // Numeric_Param objects for all numeric values to be tracked
@@ -143,9 +142,11 @@ class DataManager
         Numeric_Param screw_speed       = { 6,  0x07, 0.0, false };
         Numeric_Param roller_speed      = { 7,  0x08, 0.0, false };
         Numeric_Param spooler_speed     = { 8,  0x09, 0.0, false };
-        Numeric_Param filament_diameter = { 9,  0x0A, 0.0, false };
-        Numeric_Param extruded_length   = { 10, 0x0B, 0.0, false };
+        Numeric_Param heater_1_power    = { 9,  0x0A, 0.0, false };
+        Numeric_Param heater_2_power    = { 10, 0x0B, 0.0, false };
         Numeric_Param projected_yield   = { 11, 0x0C, 0.0, false };
+        Numeric_Param heater_3_power    = { 12, 0x0D, 0.0, false };
+        
         
         // Status_Param objects for all status values to be tracked
         Status_Param hopper_lid_status  = { 0, 0x10, NONE, false };
@@ -157,7 +158,7 @@ class DataManager
         std::vector<Numeric_Param> numeric_params = { desired_yield,
             required_input, ground_weight, zone_1_temp, zone_2_temp,
             zone_3_temp, screw_speed, roller_speed, spooler_speed,
-            filament_diameter, extruded_length, projected_yield };
+            heater_1_power, heater_2_power, projected_yield, heater_3_power };
         
         // vector of Status_Param structs
         std::vector<Status_Param> status_params = { hopper_lid_status,

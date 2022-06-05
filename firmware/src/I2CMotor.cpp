@@ -104,6 +104,11 @@ float I2CMotor::get_motor_speed( unsigned char motor_id )
     return ((float)motor_objects[motor_id].current_speed);
 }
 
+short I2CMotor::get_motor_direction(unsigned char motor_id)
+{
+    return motor_objects[motor_id].current_direction;
+}
+
 
 /**
  * set_motor_directions()
@@ -148,6 +153,7 @@ float I2CMotor::set_speed( unsigned char motor_id, short new_speed )
     // set new direction for selected motor based on +/- new speed
     motor_objects[motor_id].current_direction = new_direction;
     
+    new_speed = (new_speed * 256) / 100;
     // if new_speed is greater than max, set new speed to max
     if ( new_speed >= 255 || new_speed <= -255)
     {
@@ -183,7 +189,7 @@ float I2CMotor::set_speed( unsigned char motor_id, short new_speed )
     CORETIMER_DelayUs( 200 );
     
     // return the new speed
-    return ((float)motor_objects[motor_id].current_speed / 255) * 100;
+    return ((float)motor_objects[motor_id].current_speed / 255) * 100 * motor_objects[motor_id].current_direction;
 }
 
 /**

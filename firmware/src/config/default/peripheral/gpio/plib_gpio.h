@@ -62,6 +62,17 @@
 // *****************************************************************************
 
 
+/*** Macros for BUTTON_1 pin ***/
+#define BUTTON_1_Set()               (LATESET = (1<<5))
+#define BUTTON_1_Clear()             (LATECLR = (1<<5))
+#define BUTTON_1_Toggle()            (LATEINV= (1<<5))
+#define BUTTON_1_OutputEnable()      (TRISECLR = (1<<5))
+#define BUTTON_1_InputEnable()       (TRISESET = (1<<5))
+#define BUTTON_1_Get()               ((PORTE >> 5) & 0x1)
+#define BUTTON_1_PIN                  GPIO_PIN_RE5
+#define BUTTON_1_InterruptEnable()   (CNENESET = (1<<5))
+#define BUTTON_1_InterruptDisable()  (CNENECLR = (1<<5))
+
 /*** Macros for HEATER_CONTROL_2 pin ***/
 #define HEATER_CONTROL_2_Set()               (LATGSET = (1<<6))
 #define HEATER_CONTROL_2_Clear()             (LATGCLR = (1<<6))
@@ -70,6 +81,28 @@
 #define HEATER_CONTROL_2_InputEnable()       (TRISGSET = (1<<6))
 #define HEATER_CONTROL_2_Get()               ((PORTG >> 6) & 0x1)
 #define HEATER_CONTROL_2_PIN                  GPIO_PIN_RG6
+
+/*** Macros for BUTTON_4 pin ***/
+#define BUTTON_4_Set()               (LATGSET = (1<<7))
+#define BUTTON_4_Clear()             (LATGCLR = (1<<7))
+#define BUTTON_4_Toggle()            (LATGINV= (1<<7))
+#define BUTTON_4_OutputEnable()      (TRISGCLR = (1<<7))
+#define BUTTON_4_InputEnable()       (TRISGSET = (1<<7))
+#define BUTTON_4_Get()               ((PORTG >> 7) & 0x1)
+#define BUTTON_4_PIN                  GPIO_PIN_RG7
+#define BUTTON_4_InterruptEnable()   (CNENGSET = (1<<7))
+#define BUTTON_4_InterruptDisable()  (CNENGCLR = (1<<7))
+
+/*** Macros for BUTTON_2 pin ***/
+#define BUTTON_2_Set()               (LATGSET = (1<<8))
+#define BUTTON_2_Clear()             (LATGCLR = (1<<8))
+#define BUTTON_2_Toggle()            (LATGINV= (1<<8))
+#define BUTTON_2_OutputEnable()      (TRISGCLR = (1<<8))
+#define BUTTON_2_InputEnable()       (TRISGSET = (1<<8))
+#define BUTTON_2_Get()               ((PORTG >> 8) & 0x1)
+#define BUTTON_2_PIN                  GPIO_PIN_RG8
+#define BUTTON_2_InterruptEnable()   (CNENGSET = (1<<8))
+#define BUTTON_2_InterruptDisable()  (CNENGCLR = (1<<8))
 
 /*** Macros for HEATER_CONTROL_1 pin ***/
 #define HEATER_CONTROL_1_Set()               (LATGSET = (1<<9))
@@ -105,6 +138,17 @@
 /*** Macros for ICAP_1 pin ***/
 #define ICAP_1_Get()               ((PORTB >> 14) & 0x1)
 #define ICAP_1_PIN                  GPIO_PIN_RB14
+
+/*** Macros for BUTTON_3 pin ***/
+#define BUTTON_3_Set()               (LATBSET = (1<<15))
+#define BUTTON_3_Clear()             (LATBCLR = (1<<15))
+#define BUTTON_3_Toggle()            (LATBINV= (1<<15))
+#define BUTTON_3_OutputEnable()      (TRISBCLR = (1<<15))
+#define BUTTON_3_InputEnable()       (TRISBSET = (1<<15))
+#define BUTTON_3_Get()               ((PORTB >> 15) & 0x1)
+#define BUTTON_3_PIN                  GPIO_PIN_RB15
+#define BUTTON_3_InterruptEnable()   (CNENBSET = (1<<15))
+#define BUTTON_3_InterruptDisable()  (CNENBCLR = (1<<15))
 
 /*** Macros for SDA1 pin ***/
 #define SDA1_Get()               ((PORTD >> 9) & 0x1)
@@ -256,6 +300,7 @@ typedef enum
 
 } GPIO_PIN;
 
+typedef  void (*GPIO_PIN_CALLBACK) ( GPIO_PIN pin, uintptr_t context);
 
 void GPIO_Initialize(void);
 
@@ -280,6 +325,29 @@ void GPIO_PortToggle(GPIO_PORT port, uint32_t mask);
 void GPIO_PortInputEnable(GPIO_PORT port, uint32_t mask);
 
 void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask);
+
+void GPIO_PortInterruptEnable(GPIO_PORT port, uint32_t mask);
+
+void GPIO_PortInterruptDisable(GPIO_PORT port, uint32_t mask);
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local Data types and Prototypes
+// *****************************************************************************
+// *****************************************************************************
+
+typedef struct {
+
+    /* target pin */
+    GPIO_PIN                 pin;
+
+    /* Callback for event on target pin*/
+    GPIO_PIN_CALLBACK        callback;
+
+    /* Callback Context */
+    uintptr_t               context;
+
+} GPIO_PIN_CALLBACK_OBJ;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -327,6 +395,21 @@ static inline void GPIO_PinOutputEnable(GPIO_PIN pin)
     GPIO_PortOutputEnable((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
 }
 
+static inline void GPIO_PinInterruptEnable(GPIO_PIN pin)
+{
+    GPIO_PortInterruptEnable((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+}
+
+static inline void GPIO_PinInterruptDisable(GPIO_PIN pin)
+{
+    GPIO_PortInterruptDisable((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+}
+
+bool GPIO_PinInterruptCallbackRegister(
+    GPIO_PIN pin,
+    const   GPIO_PIN_CALLBACK callBack,
+    uintptr_t context
+);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

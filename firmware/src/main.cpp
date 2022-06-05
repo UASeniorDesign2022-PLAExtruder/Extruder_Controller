@@ -23,6 +23,7 @@
 // *****************************************************************************
 
 #include <stddef.h>                     // Defines NULL
+#include <stdio.h>
 #include <stdbool.h>                    // Defines true
 #include <cstdint>
 #include <stdlib.h>                     // Defines EXIT_FAILURE
@@ -33,6 +34,7 @@
 #include "config/default/peripheral/icap/plib_icap1.h" 
 #include "config/default/peripheral/gpio/plib_gpio.h"
 #include "config/default/peripheral/tmr1/plib_tmr1.h"
+#include "config/default/peripheral/evic/plib_evic.h"
 
 #include "globals.h"
 
@@ -41,15 +43,6 @@
 
 uint16_t icap1 = 0;
 uint8_t icap_count = 0;
-//uint16_t icap_pulse_midpoint_us = 0;
-//float icap_period_us = 0;
-//const uint16_t PULSE_CORRECTION_OFFSET = 500;
-//float icap_pulse_width_sum = 0;
-//float icap_period_sum = 0;
-//uint8_t pulse_measurement_count = 0;
-//uint8_t period_measurement_count = 0;
-//const uint16_t NUMBER_OF_PULSE_MEASUREMENTS = 200;
-//const uint16_t NUMBER_OF_PERIOD_MEASUREMENTS = 50;
 
 
 bool INPUT_PERIOD_MEASURE = true;
@@ -61,87 +54,66 @@ void TIMER2_EventHandler(uint32_t status, uintptr_t context)
 {
 }\
 
+void BUTTON_1_EventHandler( GPIO_PIN pin, uintptr_t context)
+{
+    if (BUTTON_1_Get() == 1)
+        BUTTON_1_PRESSED = true;
+    BUTTON_1_Clear();
+}
+
+void BUTTON_2_EventHandler( GPIO_PIN pin, uintptr_t context)
+{
+    if (BUTTON_2_Get() == 1)
+        BUTTON_2_PRESSED = true;
+    BUTTON_2_Clear();
+}
+
+void BUTTON_3_EventHandler( GPIO_PIN pin, uintptr_t context)
+{
+    if (BUTTON_3_Get() == 1)
+        BUTTON_3_PRESSED = true;
+    BUTTON_3_Clear();
+}
+
+void BUTTON_4_EventHandler( GPIO_PIN pin, uintptr_t context)
+{
+    if (BUTTON_4_Get() == 1)
+        BUTTON_4_PRESSED = true;
+    BUTTON_4_Clear();
+}
+
 void ICAP1_EventHandler(uintptr_t context)
 {
-//    if (period_measurement_count < NUMBER_OF_PERIOD_MEASUREMENTS && INPUT_PERIOD_MEASURE)
-//    {
-//        if (icap_count == 0)
-//        {
-//            if (period_measurement_count > 0)
-//            {
-//                TMR1_Stop();
-//                icap_period_sum += ((float)TMR1_CounterGet());
-//            }
-//            TMR1_Start();
-//        }
-//        
-//        ++period_measurement_count;
-//        
-//        if (period_measurement_count > NUMBER_OF_PERIOD_MEASUREMENTS - 1)
-//        {
-//            TMR1_Stop();
-//            icap_period_us = (icap_period_sum / (period_measurement_count));
-//            INPUT_PERIOD_MEASURE = false;
-//            INPUT_PULSE_MEASURE = true;
-//        }
-//    }
-//    
-//    if (pulse_measurement_count < NUMBER_OF_PULSE_MEASUREMENTS && INPUT_PULSE_MEASURE)
-//    {
-//        switch (icap_count)
-//        {
-//            case 0:
-//                TMR1_Start();
-//                break;
-//            case 1:
-//                TMR1_Stop();
-//                icap_pulse_width_sum += ((float)TMR1_CounterGet());
-//                break;
-//            default:
-//                break;
-//        }
-//        
-//        ++pulse_measurement_count;
-//        
-//        if (pulse_measurement_count > NUMBER_OF_PULSE_MEASUREMENTS - 1)
-//        {
-//            icap_pulse_midpoint_us = (icap_pulse_width_sum / (pulse_measurement_count));
-//            INPUT_PULSE_MEASURE = false;
-//        }
-//        
-//    }
-    
     if (icap_count == 0)
-    {
-        CORETIMER_DelayUs(heater_power_control_delay_Z3);
-        HEATER_CONTROL_1_Set();
+    {   
+        CORETIMER_DelayUs(first_delay);
         HEATER_CONTROL_2_Set();
-        HEATER_CONTROL_3_Set();
-
-
-
         CORETIMER_DelayUs(100);
-        HEATER_CONTROL_1_Clear();
         HEATER_CONTROL_2_Clear();
-        HEATER_CONTROL_3_Clear();
         
-    // CORETIMER_DelayUs(heater_power_control_delay_Z1-100);
-    // HEATER_CONTROL_1_Set();
-    // HEATER_CONTROL_2_Set();
-    // CORETIMER_DelayUs(100);
-    // HEATER_CONTROL_1_Clear();
-    // HEATER_CONTROL_2_Clear();
-
-
-    // CORETIMER_DelayUs(heater_power_control_delay_Z2 - heater_power_control_delay_Z1-100);
-    // HEATER_CONTROL_2_Set();
-    // CORETIMER_DelayUs(100);
-    // HEATER_CONTROL_2_Clear();
-    //
-    // CORETIMER_DelayUs(heater_power_control_delay_Z3 - heater_power_control_delay_Z2 - 100 - 100);
-    // HEATER_CONTROL_3_Set();
-    // CORETIMER_DelayUs(100);
-    // HEATER_CONTROL_3_Clear();
+        if (ZONE_1_ACTIVE)
+        {
+            CORETIMER_DelayUs(first_delay);
+            HEATER_CONTROL_1_Set();
+            CORETIMER_DelayUs(100);
+            HEATER_CONTROL_1_Clear();
+        }
+        
+        if (ZONE_2_ACTIVE)
+        {
+            CORETIMER_DelayUs(second_delay);
+            HEATER_CONTROL_2_Set();
+            CORETIMER_DelayUs(100);
+            HEATER_CONTROL_2_Clear();
+        }
+        
+        if (ZONE_3_ACTIVE)
+        {
+            CORETIMER_DelayUs(third_delay);
+            HEATER_CONTROL_3_Set();
+            CORETIMER_DelayUs(100);
+            HEATER_CONTROL_3_Clear();
+        } 
     }
     ++icap_count;
     if (icap_count > 1)
@@ -165,11 +137,30 @@ int main ( void )
     HEATER_CONTROL_1_OutputEnable();
     HEATER_CONTROL_2_OutputEnable();
     HEATER_CONTROL_3_OutputEnable();
-
-    heater_power_control_delay = 2500;
+    
+    
+    // heater_power_control_delay = 2500;
     
     TMR2_CallbackRegister(TIMER2_EventHandler,(uintptr_t)NULL);
+
     ICAP1_CallbackRegister(ICAP1_EventHandler,(uintptr_t)NULL);
+    
+    GPIO_PinInterruptDisable(BUTTON_1_PIN);
+    GPIO_PinInterruptDisable(BUTTON_2_PIN);
+    GPIO_PinInterruptDisable(BUTTON_3_PIN);
+    GPIO_PinInterruptDisable(BUTTON_4_PIN);
+    GPIO_PinInterruptCallbackRegister(BUTTON_1_PIN, BUTTON_1_EventHandler, (uintptr_t)NULL);
+    GPIO_PinInterruptCallbackRegister(BUTTON_3_PIN, BUTTON_3_EventHandler, (uintptr_t)NULL);
+    GPIO_PinInterruptCallbackRegister(BUTTON_2_PIN, BUTTON_2_EventHandler, (uintptr_t)NULL);
+    GPIO_PinInterruptCallbackRegister(BUTTON_4_PIN, BUTTON_4_EventHandler, (uintptr_t)NULL);
+    GPIO_PinInterruptEnable(BUTTON_1_PIN);
+    GPIO_PinInterruptEnable(BUTTON_2_PIN);
+    GPIO_PinInterruptEnable(BUTTON_3_PIN);
+    GPIO_PinInterruptEnable(BUTTON_4_PIN);
+
+
+
+
     
     
     while ( true )

@@ -8,8 +8,13 @@
 #ifndef RTDSENSOR_H
 #define	RTDSENSOR_H
 
+#include "config/default/peripheral/gpio/plib_gpio.h"
 class RTDSensor {
 public:
+    
+    GPIO_PIN RTD_CS;
+    float R_NOM = 100.0;
+    float R_REF = 430.0;
     #define MAX31865_CONFIG_REG 0x00
     #define MAX31865_CONFIG_BIAS 0x80
     #define MAX31865_CONFIG_MODEAUTO 0x40
@@ -48,32 +53,16 @@ public:
         MAX31865_4WIRE = 0
     } max31865_numwires_t;
 
-    RTDSensor();
+    RTDSensor(float r_nom, float r_ref, GPIO_PIN chip_select);
     void SPI_RTD_init_8(void);
     uint8_t SPI_transfer_8( uint8_t data );
-    uint8_t readRegister8_CS_1(uint8_t addr);
-    uint8_t readRegister8_CS_2(uint8_t addr);
-    uint8_t readRegister8_CS_3(uint8_t addr);
-    uint16_t readRegister16_CS_1(uint8_t addr1, uint8_t addr2);
-    uint16_t readRegister16_CS_2(uint8_t addr1, uint8_t addr2);
-    uint16_t readRegister16_CS_3(uint8_t addr1, uint8_t addr2);
-    void writeRegister8_CS_1(uint8_t addr, uint8_t data);
-    void writeRegister8_CS_2(uint8_t addr, uint8_t data);
-    void writeRegister8_CS_3(uint8_t addr, uint8_t data);
-    bool RTD_begin_CS_1(max31865_numwires_t wires);
-    bool RTD_begin_CS_2(max31865_numwires_t wires);
-    bool RTD_begin_CS_3(max31865_numwires_t wires);
-    uint16_t readRTD_CS_1(void);
-    uint16_t readRTD_CS_2(void);
-    uint16_t readRTD_CS_3(void);
-    float temperature_CS_1();
-    float temperature_CS_2();
-    float temperature_CS_3();
-    float get_temp_CS_1();
-    float get_temp_CS_2();
-    float get_temp_CS_3();
-    
-    void get_all_temps();
+    uint8_t readRegister8(uint8_t addr);
+    uint16_t readRegister16(uint8_t addr1, uint8_t addr2);
+    void writeRegister8(uint8_t addr, uint8_t data);
+    bool RTD_begin(max31865_numwires_t wires);
+    uint16_t readRTD(void);
+    float temperature();
+    float get_temp();
 
 
 private:

@@ -66,6 +66,7 @@ void OUTPUT_COMPARE_1_InterruptHandler( void );
 void TIMER_2_InterruptHandler( void );
 void TIMER_3_InterruptHandler( void );
 void I2C_1_InterruptHandler( void );
+void CHANGE_NOTICE_InterruptHandler( void );
 void I2C_2_InterruptHandler( void );
 
 
@@ -96,6 +97,11 @@ void TIMER_3_Handler (void)
 void I2C_1_Handler (void)
 {
     I2C_1_InterruptHandler();
+}
+
+void CHANGE_NOTICE_Handler (void)
+{
+    CHANGE_NOTICE_InterruptHandler();
 }
 
 void I2C_2_Handler (void)

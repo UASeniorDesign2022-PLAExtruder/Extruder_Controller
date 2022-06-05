@@ -88,6 +88,7 @@ class I2CMotor
         void send_I2C( uint8_t flag, uint8_t data_byte_1 = 0x01, uint8_t data_byte_2 = 0x01 );
         void set_PWM_frequency( void );
         float get_motor_speed( unsigned char motor_id );
+        short get_motor_direction(unsigned char motor_id);
         void set_motor_direction( uint8_t motor_directions );
         float set_speed( unsigned char motor_id, short new_speed );
         float nudge_up( unsigned char motor_id, unsigned char amount );

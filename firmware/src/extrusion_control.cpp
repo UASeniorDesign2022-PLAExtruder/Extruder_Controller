@@ -23,6 +23,8 @@
 #include "DataManager.h"
 #include "I2C.h"
 #include "I2CMotor.h"
+//#include "temp_control.h"
+#include "TemperatureController.h"
 #include "pwm.h"                // screw motor functions
 
 
@@ -44,6 +46,8 @@ typedef struct
 } CONTROL_SUBSTATE_DATA;
             
 
+TemperatureController tempController(true, true, true);
+
 const uint8_t M1 = 0;        // refer to motors on either I2C controller
 const uint8_t M2 = 1;
 
@@ -59,9 +63,10 @@ uint16_t tension_upper_limit = 750;             // adjust for filament tension
 // local variables
 float roller_speed = 0;
 float spooler_speed = 0;
+float spooler_system_speed = -100;
 float screw_speed = 0;
 unsigned int screw_period = 7999;
-unsigned int screw_duty_cycle = 6000;
+unsigned int screw_duty_cycle = 800;
 float current_diameter = 0; 
 float zone1 = 0;
 float zone2 = 0;
@@ -91,12 +96,24 @@ void EXTRUSION_CONTROL_Tasks( void )
     switch ( extrusion_controlData.state )
     {
         case EXTRUSION_CONTROL_STATE_INIT:
-       
+        {
             //timer and input capture for temp
            
             ICAP1_Enable();
             TMR3_Start();
             HEATER_CONTROL_1_OutputEnable();
+            
+            BUTTON_1_InputEnable();
+            BUTTON_1_Clear();
+            BUTTON_2_InputEnable();
+            BUTTON_2_Clear();
+            BUTTON_3_InputEnable();
+            BUTTON_3_Clear();
+            BUTTON_4_InputEnable();
+            BUTTON_4_Clear();
+            
+            tempController.temp_control_turn_on(false, true, false);
+            // temp_control_turn_on(TURN_ON_ZONE_1, TURN_ON_ZONE_2, TURN_ON_ZONE_3);
             
             // TO DO: new PWM interface that can be initialized from a frequency
             // in Hz instead of all these numbers
@@ -106,7 +123,7 @@ void EXTRUSION_CONTROL_Tasks( void )
             // see pwm.h for TMR2_PRESCALE constants
             
             pwm_init(screw_period, screw_duty_cycle, TMR2_PRESCALE_64);
-            screw_speed = ((float)screw_duty_cycle / (float) screw_period) * 100;
+            screw_speed = ((float)screw_duty_cycle / (float)(screw_period + 1)) * 100;
             dataManager.set_numeric_param( SCREW_SPEED_INDEX, screw_speed );
             
             
@@ -121,13 +138,13 @@ void EXTRUSION_CONTROL_Tasks( void )
             CORETIMER_DelayMs( 5000 );
 
             // set initial roller and spoolers to 50% duty cycle
-            rollers.set_speed( M1, -220 );
-            roller_speed = rollers.set_speed( M2, -220 );
-            spooler_speed = spooler.set_speed( M1, -220 );
+            rollers.set_speed( M1, spooler_system_speed );
+            rollers.set_speed( M2, spooler_system_speed );
+            spooler.set_speed( M1, spooler_system_speed );
             
             // pass initial roller and spooler speeds to dataManager
-            dataManager.set_numeric_param( ROLLER_SPEED_INDEX, roller_speed );
-            dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_speed );
+            dataManager.set_numeric_param( ROLLER_SPEED_INDEX, spooler_system_speed );
+            dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_system_speed );
             
             bool appInitialized = true;
 
@@ -139,8 +156,64 @@ void EXTRUSION_CONTROL_Tasks( void )
 
         case EXTRUSION_CONTROL_STATE_SERVICE_TASKS:
         {
-
+            
+            current_delay_zone_2 = tempController.temp_control_compare_actual_to_target(2, current_delay_zone_2, actual_temp_2, target_temp_zone_2);
+            first_delay = current_delay_zone_2;
+            dataManager.set_numeric_param(HEATER_2_INDEX, (float)second_delay);
+            
+            
             dataManager.set_numeric_param( SCREW_SPEED_INDEX, screw_speed );
+            
+            if (BUTTON_1_PRESSED == true)
+            {
+                spooler_system_speed += (10 * spooler.get_motor_direction(M1));
+                if (spooler_system_speed > 100 || spooler_system_speed < -100)
+                    spooler_system_speed = 10 * spooler.get_motor_direction(M1);
+                
+                BUTTON_1_PRESSED = false;
+            }
+            
+            if (BUTTON_2_PRESSED == true)
+            {
+                screw_duty_cycle += 800;
+                if (screw_duty_cycle > (screw_period + 1))
+                    screw_duty_cycle = 800;
+                BUTTON_2_PRESSED = false;
+            }
+            
+            if (BUTTON_3_PRESSED == true)
+            {
+                float temp_2_current = dataManager.get_numeric_param( ZONE_2_TEMP_INDEX );
+                temp_2_current += 10;
+                if (temp_2_current > 300)
+                    temp_2_current = 300;
+                dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, temp_2_current);
+                actual_temp_2 = temp_2_current;
+                BUTTON_3_PRESSED = false;
+            }
+            
+            if (BUTTON_4_PRESSED == true)
+            {
+                float temp_2_current = dataManager.get_numeric_param( ZONE_2_TEMP_INDEX );
+                temp_2_current -= 10;
+                if (temp_2_current < 0)
+                    temp_2_current = 0;
+                dataManager.set_numeric_param( ZONE_2_TEMP_INDEX, temp_2_current);
+                BUTTON_4_PRESSED = false;
+            }
+            
+            // adjust spooler system
+            rollers.set_speed( M2, spooler_system_speed );
+            spooler.set_speed( M1, spooler_system_speed );
+            dataManager.set_numeric_param( ROLLER_SPEED_INDEX, spooler_system_speed );
+            dataManager.set_numeric_param( SPOOLER_SPEED_INDEX, spooler_system_speed );
+            // adjust screw
+            pwm_set_duty_cycle(screw_duty_cycle);
+            screw_speed = ((float)screw_duty_cycle / (float)(screw_period + 1)) * 100;
+            dataManager.set_numeric_param( SCREW_SPEED_INDEX, screw_speed );
+            
+            
+            
             /* TO DO: implement sub-state FSM
              * 
              * state machine will hold temperature control logic
@@ -171,7 +244,6 @@ void EXTRUSION_CONTROL_Tasks( void )
                 }
             }
             */
-            
             /*
             // test receiving temperatures from dataManager
             zone1 = dataManager.get_numeric_param( ZONE_1_TEMP_INDEX );
@@ -216,7 +288,7 @@ void EXTRUSION_CONTROL_Tasks( void )
             
             /******************************************************************/
             
-            // CORETIMER_DelayMs( 500 );
+            CORETIMER_DelayMs( 100 );
         }
 
         default:
