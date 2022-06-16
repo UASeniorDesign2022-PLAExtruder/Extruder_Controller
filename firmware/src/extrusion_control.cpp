@@ -101,7 +101,7 @@ void EXTRUSION_CONTROL_Tasks( void )
            
             ICAP1_Enable();
             TMR3_Start();
-            HEATER_CONTROL_1_OutputEnable();
+            //HEATER_CONTROL_1_OutputEnable();
             
             BUTTON_1_InputEnable();
             BUTTON_1_Clear();

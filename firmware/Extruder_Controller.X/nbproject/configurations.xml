@@ -119,9 +119,14 @@
       <itemPath>../src/TempSensor.h</itemPath>
       <itemPath>../src/pwm.h</itemPath>
       <itemPath>../src/MAX31865.h</itemPath>
+<<<<<<< HEAD
       <itemPath>/home/wilson/HarmonyProjects/zzzzz/Extruder_Controller/firmware/src/RTD.h</itemPath>
       <itemPath>/home/wilson/HarmonyProjects/zzzzz/Extruder_Controller/firmware/src/RTDSensor.h</itemPath>
       <itemPath>temp_control.h</itemPath>
+=======
+      <itemPath>C:/Users/Liebrecht/HarmonyProjects/Extruder_Controller/firmware/src/RTD.h</itemPath>
+      <itemPath>C:/Users/Liebrecht/HarmonyProjects/Extruder_Controller/firmware/src/RTDSensor.h</itemPath>
+>>>>>>> b04dec489a6f148be6b80d156400cbc070f824d5
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -227,11 +232,16 @@
       <itemPath>../src/TempSensor.cpp</itemPath>
       <itemPath>../src/pwm.c</itemPath>
       <itemPath>../src/MAX31865.c</itemPath>
+<<<<<<< HEAD
       <itemPath>/home/wilson/HarmonyProjects/zzzzz/Extruder_Controller/firmware/src/RTD.cpp</itemPath>
       <itemPath>/home/wilson/HarmonyProjects/zzzzz/Extruder_Controller/firmware/src/RTDSensor.cpp</itemPath>
       <itemPath>temp_control.cpp</itemPath>
       <itemPath>/home/wilson/HarmonyProjects/zzzzz/Extruder_Controller/firmware/src/TemperatureController.h</itemPath>
       <itemPath>/home/wilson/HarmonyProjects/zzzzz/Extruder_Controller/firmware/src/TemperatureController.cpp</itemPath>
+=======
+      <itemPath>C:/Users/Liebrecht/HarmonyProjects/Extruder_Controller/firmware/src/RTD.cpp</itemPath>
+      <itemPath>C:/Users/Liebrecht/HarmonyProjects/Extruder_Controller/firmware/src/RTDSensor.cpp</itemPath>
+>>>>>>> b04dec489a6f148be6b80d156400cbc070f824d5
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -273,8 +283,8 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PKOBSKDEPlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>3.01</languageToolchainVersion>
-        <platform>2</platform>
+        <languageToolchainVersion>4.00</languageToolchainVersion>
+        <platform>3</platform>
       </toolsSet>
       <packs>
         <pack name="PIC32MX_DFP" vendor="Microchip" version="1.5.259"/>
